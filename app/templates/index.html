@@ -6,14 +6,13 @@
 {% endblock %}
 
 {% block divisions%}
-    <form action='selectDivisions' method='POST'>
             {% if divisions %}
             {% for division in divisions %}
-            <button type="submit" class="btn btn-dark mt-1" name="id" value={{ division.idDivision }}>{{ division.shortTitle }}</button>
+            <button class="btn btn-dark mt-1" name="id" value={{ division.idDivision }}>{{ division.shortTitle }}</button>
             {% endfor %}
             {% endif %}
-    </form>
 {% endblock %}
+
 
 {% block bartitle%}
 Расписание

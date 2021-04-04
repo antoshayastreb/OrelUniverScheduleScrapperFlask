@@ -1,18 +1,28 @@
 from app import app
-from flask import render_template
+from flask import render_template, request, jsonify
 import ast
 import requests
+
+base_request = 'http://oreluniver.ru/schedule/'
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    base_request = 'http://oreluniver.ru/schedule/'
+    return render_template('index.html', divisions=get_divisionlist())
+
+
+@app.route('/get_kurslist', methods=['POST'])
+def get_kourselist():
+    division_id = request.form['division_id']
+    kurslist_request = base_request + str(division_id) + '/' + 'kurslist'
+    kurslist_response = ast.literal_eval(requests.get(kurslist_request).text)
+    return jsonify({'data': render_template('kurslist.html', kurs_list=kurslist_response)})
+
+
+def get_divisionlist():
     divisions_request = base_request + 'divisionlistforstuds'
 
     divisions_response = ast.literal_eval(requests.get(divisions_request).text)
 
-    context = {
-        'divisions': divisions_response,
-    }
-    return render_template('index.html', divisions=divisions_response)
+    return divisions_response
