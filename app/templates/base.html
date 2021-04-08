@@ -7,7 +7,6 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <script type="text/javascript" src="{{ url_for('static', filename='js/schedule.js') }}"></script>
 
     <title>{% block title %}{% endblock %}</title>
   </head>
@@ -40,9 +39,20 @@
                     </button>
                   </h2>
                   <div id="flush-divisions" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionStudent">
-                    <div class="accordion-body">
+                    <div class="accordion-body" id="divisions">
                       {% block divisions%}
                       {%endblock%}
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                  <h2 class="accordion-header" id="flush-kursHeader">
+                    <button class="accordion-button collapsed" id="accordionKurs" type="button" data-bs-toggle="collapse" data-bs-target="#flush-kurs" aria-expanded="false" aria-controls="flush-kurs">
+                      Курс
+                    </button>
+                  </h2>
+                  <div id="flush-kurs" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionStudent">
+                    <div class="accordion-body" id="kurs">
+
                     </div>
                   </div>
                 </div>
@@ -56,8 +66,8 @@
       </main>
 
     </div>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/schedule.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/schedule.js') }}"></script>
   </body>
 </html>

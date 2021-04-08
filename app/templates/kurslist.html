@@ -1,5 +1,5 @@
 {% block kurslist%}
             {% for kurs in kurs_list %}
-            <button class="btn btn-dark mt-1" value={{ kurs.kurs }}>{{ kurs.kurs }}</button>
+            <button class="btn btn-dark mt-1" id="kurs" value={{ kurs.kurs }}>{{ kurs.kurs }}</button>
             {% endfor %}
 {% endblock %}
