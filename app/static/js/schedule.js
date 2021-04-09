@@ -8,7 +8,7 @@ function general() {
         var el = $(this);
         console.log(el.parent().attr('id'));
         el.siblings().addClass('disabled');
-        var val = el.data('value');
+        var val = el.val();
         switch(el.parent().attr('id')){
             case 'divisions':
                 $('#kurs .accordion-body').children().remove();
@@ -26,7 +26,7 @@ function kurslist(division_id){
        dataType: "json",
        data: {'division_id':division_id},
        success: function(resp){
-         $('#kurs .accordion-body').append(resp.data);
+         $('#accordionKursbody').append(resp.data);
        }
       });
 }
