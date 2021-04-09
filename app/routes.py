@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, make_response
 import ast
 import requests
 
@@ -17,16 +17,20 @@ def get_kourselist():
     division_id = request.form['division_id']
     kurslist_request = base_request + str(division_id) + '/' + 'kurslist'
     kurslist_response = ast.literal_eval(requests.get(kurslist_request).text)
-    return jsonify({'data': render_template('kurslist.html', kurs_list=kurslist_response)})
+    res = make_response(jsonify({'data': render_template('kurslist.html', kurs_list=kurslist_response)}))
+    res.set_cookie('division_id', division_id)
+    return res
 
 
 @app.route('/get_grouplist', methods=['POST'])
 def get_grouplist():
-    division_id = request.form['division_id']
+    division_id = request.cookies.get('division_id')
     kurs = request.form['kurs']
     grouplist_request = base_request + str(division_id) + '/' + str(kurs) + '/' + 'grouplist'
     grouplist_response = ast.literal_eval(requests.get(grouplist_request).text)
-    return jsonify({'data': render_template('grouplist.html', group_list=grouplist_response)})
+    res = make_response(jsonify({'data': render_template('grouplist.html', group_list=grouplist_response)}))
+    res.set_cookie('kurs', kurs)
+    return res
 
 
 def get_divisionlist():
