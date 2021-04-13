@@ -22,6 +22,12 @@ function general() {
                 accordionBody.innerHTML = '';
                 grouplist(val);
                 break;
+            case 'group':
+                var accordionBody = document.getElementById('group');
+                console.log(accordionBody);
+                accordionBody.innerHTML = '';
+                grouplist(val);
+                break;
         }
     })
 }

@@ -35,6 +35,17 @@ def get_grouplist():
     res.set_cookie('kurs', kurs)
     return res
 
+@app.route('/print_student_schedule', methods=['POST'])
+def print_student_schedule():
+    division_id = request.cookies.get('division_id')
+    kurs = request.cookies.get('kurs')
+    group = request.form['group']
+    grouplist_request = base_request + str(division_id) + '/' + str(kurs) + '/' + 'grouplist'
+    grouplist_response = ast.literal_eval(requests.get(grouplist_request).text)
+    res = make_response(jsonify({'data': render_template('grouplist.html', group_list=grouplist_response)}))
+    res.set_cookie('group', group)
+    return res
+
 
 def get_divisionlist():
     divisions_request = base_request + 'divisionlistforstuds'

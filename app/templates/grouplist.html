@@ -3,18 +3,18 @@
             {% if loop.first%}
                 <h3>Бакалавриат</h3>
             {% endif %}
-                <button class="btn btn-dark mt-1" id="group" value={{ group.idgruop }}>{{ group.title }}</button>
+                <button class="btn btn-dark mt-1" id="group" value={{ group.idgruop }} data-direction={{ group.Codedirection }}>{{ group.title }}</button>
             {% endfor %}
             {% for group in group_list if group.levelEducation == "магистратура" %}
             {% if loop.first%}
                 <h3>Магистратура</h3>
             {% endif %}
-            <button class="btn btn-dark mt-1" id="group" value={{ group.idgruop }}>{{ group.title }}</button>
+            <button class="btn btn-dark mt-1" id="group" value={{ group.idgruop }} data-direction={{ group.Codedirection }}>{{ group.title }}</button>
             {% endfor %}
             {% for group in group_list if group.levelEducation == "специалитет" %}
             {% if loop.first%}
                 <h3>Специалитет</h3>
             {% endif %}
-            <button class="btn btn-dark mt-1" id="group" value={{ group.idgruop }}>{{ group.title }}</button>
+            <button class="btn btn-dark mt-1" id="group" value={{ group.idgruop }} data-direction={{ group.Codedirection }}>{{ group.title }}</button>
             {% endfor %}
 {% endblock %}
