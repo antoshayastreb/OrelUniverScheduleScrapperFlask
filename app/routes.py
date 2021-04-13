@@ -18,6 +18,9 @@ def get_kourselist():
     kurslist_request = base_request + str(division_id) + '/' + 'kurslist'
     kurslist_response = ast.literal_eval(requests.get(kurslist_request).text)
     res = make_response(jsonify({'data': render_template('kurslist.html', kurs_list=kurslist_response)}))
+    res.delete_cookie('division_id')
+    res.delete_cookie('kurs')
+    res.delete_cookie('group')
     res.set_cookie('division_id', division_id)
     return res
 

@@ -4,24 +4,24 @@ $(document).ready(function ()
 });
 
 function general() {
-    $('body').on('click', '.btn', function(){
+    $('body').on('click', 'button', function(){
         var el = $(this);
-        console.log(el.parent().attr('id'));
+        console.log(el.attr('id'));
         el.addClass('disabled').siblings().removeClass('disabled');
         var val = el.val();
-        switch(el.parent().attr('id')){
-            case 'divisions':
+        switch(el.attr('id')){
+            case 'division':
                 var accordionBody = document.getElementById('kurs');
                 console.log(accordionBody);
                 accordionBody.innerHTML = '';
                 kurslist(val);
-                $('#accordionKurs').click();
+                break;
             case 'kurs':
                 var accordionBody = document.getElementById('group');
                 console.log(accordionBody);
                 accordionBody.innerHTML = '';
                 grouplist(val);
-                $('#accordionGroup').click();
+                break;
         }
     })
 }
@@ -34,6 +34,7 @@ function kurslist(division_id){
        data: {'division_id':division_id},
        success: function(resp){
          $('#kurs').append(resp.data);
+         $('#aKurs').click();
        }
       });
 }
@@ -46,6 +47,7 @@ function grouplist(kurs){
        data: {'kurs':kurs},
        success: function(resp){
          $('#group').append(resp.data);
+         $('#aGroup').click();
        }
       });
 }
