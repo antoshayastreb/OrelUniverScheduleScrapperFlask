@@ -2,6 +2,7 @@ from app import app
 from flask import render_template, request, jsonify, make_response
 import ast
 import requests
+from app import datetimecalc as dtc
 
 base_request = 'http://oreluniver.ru/schedule/'
 
@@ -37,12 +38,11 @@ def get_grouplist():
 
 @app.route('/print_student_schedule', methods=['POST'])
 def print_student_schedule():
-    division_id = request.cookies.get('division_id')
-    kurs = request.cookies.get('kurs')
     group = request.form['group']
-    grouplist_request = base_request + str(division_id) + '/' + str(kurs) + '/' + 'grouplist'
-    grouplist_response = ast.literal_eval(requests.get(grouplist_request).text)
-    res = make_response(jsonify({'data': render_template('grouplist.html', group_list=grouplist_response)}))
+    weekstart = dtc.current_week_start_ms()
+    schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
+    schedule_response = requests.get(schedule_request).json()
+    res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_response)}))
     res.set_cookie('group', group)
     return res
 

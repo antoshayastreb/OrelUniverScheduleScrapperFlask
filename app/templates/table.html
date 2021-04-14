@@ -1,31 +1,106 @@
 {% block table%}
-    <table class="table">
-      <thead>
-        <tr class="table-dark">
-          <th scope="col">Пара</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td colspan="2">Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
-      </tbody>
-    </table>
+    {% if schedule %}
+    <div class="d-flex-responsive flex-row-reverse bd-highlight">
+                      <div class="ms-auto p-2 bd-highlight">
+                        <button class="btn btn-dark mt-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Предыдущая неделя"><i class="bi bi-chevron-left"></i></button>
+                        <button class="btn btn-dark mt-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Текущая неделя"><i class="bi bi-calendar"></i></button>
+                        <button class="btn btn-dark mt-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Следущая неделя"><i class="bi bi-chevron-right"></i></button>
+                      </div>
+    </div>
+          <div class="d-flex justify-content-between">
+                      <div class="p-2 bd-highlight" id="schedule_group_title"><h4>Расписание занятий для группы</h4></div>
+                      <div class="ms-auto p-2 bd-highlight" id="schedule_current_week"><h5>Неделя: - </h5></div>
+          </div>
+          <div id="table-content" class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr class="table-dark">
+                      <th scope="col">пара</th>
+                      <th scope="col">Понедельник<br></th>
+                      <th scope="col">Вторник<br></th>
+                      <th scope="col">Среда<br></th>
+                      <th scope="col">Четверг<br></th>
+                      <th scope="col">Пятница<br></th>
+                      <th scope="col">Суббота<br></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">4</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">5</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">6</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">7</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">8</th>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+          </div>
+    {% else %}
+      <h3>На эту неделю расписания не найдено!</h3>
+    {% endif %}
 {% endblock %}

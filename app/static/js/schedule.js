@@ -23,10 +23,12 @@ function general() {
                 grouplist(val);
                 break;
             case 'group':
-                var accordionBody = document.getElementById('group');
-                console.log(accordionBody);
-                accordionBody.innerHTML = '';
-                grouplist(val);
+                var schedule_body = document.getElementById('tableforstuds');
+                console.log(schedule_body);
+                $('#aGroup').click();
+                $('#tableforstuds').hide();
+                schedule_body.innerHTML = '';
+                print_schedule(val);
                 break;
         }
     })
@@ -54,6 +56,19 @@ function grouplist(kurs){
        success: function(resp){
          $('#group').append(resp.data);
          $('#aGroup').click();
+       }
+      });
+}
+
+function print_schedule(group){
+    $.ajax({
+       url: "/print_student_schedule",
+       type: "POST",
+       dataType: "json",
+       data: {'group':group},
+       success: function(resp){
+         $('#tableforstuds').append(resp.data);
+         $('#tableforstuds').show();
        }
       });
 }
