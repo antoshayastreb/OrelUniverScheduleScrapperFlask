@@ -57,7 +57,7 @@ def callback():
         unique_id = userinfo_response.json()["sub"]
         users_email = userinfo_response.json()["email"]
         picture = userinfo_response.json()["picture"]
-        users_name = userinfo_response.json()["given_name"]
+        users_name = userinfo_response.json()["name"]
     else:
         return "User email not available or not verified by Google.", 400
 
@@ -68,6 +68,13 @@ def callback():
     ).scalar()
 
     if exists:
+        dbUser = User.query.filter_by(id=unique_id).first()
+        if dbUser.profile_pic != picture:
+            dbUser.profile_pic = picture
+            db.session.commit()
+        if dbUser.username != users_name:
+            dbUser.username = users_name
+            db.session.commit()
         login_user(user)
         return redirect(url_for("index"))
     else:

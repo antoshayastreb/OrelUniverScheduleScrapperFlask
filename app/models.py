@@ -14,14 +14,17 @@ class User(db.Model, UserMixin):
     email = db.Column(db.Text, index=True, unique=True, nullable=False)
     profile_pic = db.Column(db.Text, nullable=False)
 
-    def __init__(self, id_, name, email, profile_pic):
+    def __init__(self, id_, username, email, profile_pic):
         self.id = id_
-        self.name = name
+        self.username = username
         self.email = email
         self.profile_pic = profile_pic
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+    def avatar32px(self):
+        return self.profile_pic.replace('=s96-c', '=32-c')
 
 
 class Group(db.Model):
