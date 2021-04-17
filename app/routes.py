@@ -4,7 +4,7 @@ import ast
 import requests
 from app import datetimecalc as dtc
 import json
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, login_required, logout_user
 from app.models import User
 
 base_request = 'http://oreluniver.ru/schedule/'
@@ -14,7 +14,6 @@ base_request = 'http://oreluniver.ru/schedule/'
 @app.route('/index')
 def index():
     return render_template('index.html', divisions=get_divisionlist())
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -111,6 +110,13 @@ def print_student_schedule():
     res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_response)}))
     res.set_cookie('group', group)
     return res
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
 
 
 def get_divisionlist():
