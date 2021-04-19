@@ -85,7 +85,7 @@ def write_schedule_to_calendar():
     calendar_name = 'Расписание занятий'
 
     calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
-    calendar = next(item for item in calendar_list['items'] if item['summary'] == calendar_name)
+    calendar = next((item for item in calendar_list['items'] if item['summary'] == calendar_name), None)
     if calendar:
         print(calendar['id'])
     else:
@@ -111,31 +111,46 @@ def write_schedule_to_calendar():
             schedule_exercise = Exercise(res[0], res[1], res[2], res[3], res[4], res[5], res[6],
                                          res[7], res[8], res[9], res[10], res[11], res[12])
             schedule_exercises.append(schedule_exercise)
-        # for key in schedule_item:
-        #     schedule_exercise = Exercise(schedule_item['TitleSubject'], schedule_item['TypeLesson'],
-        #                                  schedule_item['NumberLesson'], schedule_item['DateLesson'],
-        #                                  schedule_item['Korpus'], schedule_item['NumberRoom'],
-        #                                  schedule_item['Family'], schedule_item['Name'],
-        #                                  schedule_item['SecondName'], schedule_item['link'],
-        #                                  schedule_item['pass'], schedule_item['zoom_link'],
-        #                                  schedule_item['zoom_password'], )
-        #     schedule_exercises.append(schedule_exercise)
+
+    for exercise in schedule_exercises:
+        event = {
+            'summary': exercise.TitleSubject,
+            'description': '(' + exercise.TypeLesson + ')\nпреподаватель: ' + exercise.Family + ' '
+            + exercise.Name + ' ' + exercise.SecondName + '\n' + exercise.Korpus + '-' + exercise.NumberRoom +
+            '\nссылка: ' + exercise.link + '\nпароль: ' + exercise.pas + '\nссылка_zoom: ' + exercise.zoom_link +
+            '\nпароль_zoom: ' + exercise.zoom_password,
+            'start': {
+                'dateTime': exercise.startDateTime,
+                'timeZone': 'Europe/Moscow',
+            },
+            'end': {
+                'dateTime': exercise.endDateTime,
+                'timeZone': 'Europe/Moscow',
+            },
+            'reminders': {
+                'useDefault': True
+            },
+        }
+
+        event = google_calendar.build_calendar_api().events().insert(calendarId=calendar['id'], body=event).execute()
+        print('Event created: %s' % (event.get('htmlLink')))
+
     print_student_schedule()
 
 
 class Exercise:
     def __init__(self, TitleSubject, TypeLesson, NumberLesson, DateLesson, Korpus, NumberRoom, Family, Name,
                  SecondName, link, pas, zoom_link, zoom_password):
-        self.TitleSubject = TitleSubject
-        self.TypeLesson = TypeLesson
+        self.TitleSubject = TitleSubject if TitleSubject is not None else ''
+        self.TypeLesson = TypeLesson if TypeLesson is not None else ''
         self.startDateTime = DateLesson + dtc.start_time[NumberLesson]
-        self.endDateTime = DateLesson + dtc.start_time[NumberLesson]
-        self.Korpus = Korpus
-        self.NumberRoom = NumberRoom
-        self.Family = Family
-        self.Name = Name
-        self.SecondName = SecondName
-        self.link = link
-        self.pas = pas
-        self.zoom_link = zoom_link
-        self.zoom_password = zoom_password
+        self.endDateTime = DateLesson + dtc.end_time[NumberLesson]
+        self.Korpus = Korpus if Korpus is not None else ''
+        self.NumberRoom = NumberRoom if NumberRoom is not None else ''
+        self.Family = Family if Family is not None else ''
+        self.Name = Name if Name is not None else ''
+        self.SecondName = SecondName if SecondName is not None else ''
+        self.link = link if link is not None else ''
+        self.pas = pas if pas is not None else ''
+        self.zoom_link = zoom_link if zoom_link is not None else ''
+        self.zoom_password = zoom_password if zoom_password is not None else ''
