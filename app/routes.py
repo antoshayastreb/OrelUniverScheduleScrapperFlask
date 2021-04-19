@@ -1,16 +1,13 @@
 import flask
 
-from app import app, db
-from flask import render_template, request, jsonify, make_response, redirect, url_for
+from app import app, db, google_calendar, google_auth
+from flask import render_template, request, jsonify, make_response, redirect, url_for, session
 import ast
 import requests
 from app import datetimecalc as dtc
 import json
 from flask_login import current_user, login_user, login_required, logout_user
 from app.models import User
-import google.oauth2.credentials
-import google_auth_oauthlib.flow
-import googleapiclient.discovery
 
 base_request = 'http://oreluniver.ru/schedule/'
 
@@ -18,100 +15,19 @@ base_request = 'http://oreluniver.ru/schedule/'
 @app.route('/')
 @app.route('/index')
 def index():
+    if google_auth.is_logged_in() and not current_user.is_anonymous:
+        calendar = {
+            'summary': 'Расписание занятий',
+            'timeZone': 'Europe/Moscow'
+        }
+        created_calendar = google_calendar.build_calendar_api().calendars().insert(body=calendar).execute()
+        print(created_calendar['id'])
+    #     calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
+    #     for calendar_list_entry in calendar_list['items']:
+    #         print(calendar_list_entry['summary'])
+    session['current_weekstart'] = dtc.current_week_start_ms()
+
     return render_template('index.html', divisions=get_divisionlist())
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        app.config['CLIENT_SECRETS_FILE'], scopes=app.config['SCOPES'])
-    flow.redirect_uri = flask.url_for('callback', _external=True)
-
-    authorization_url, state = flow.authorization_url(
-        # Enable offline access so that you can refresh an access token without
-        # re-prompting the user for permission. Recommended for web server apps.
-        access_type='offline')
-    # Enable incremental authorization. Recommended as a best practice.
-    # include_granted_scopes='true')
-    flask.session['state'] = state
-
-    return flask.redirect(authorization_url)
-
-    # google_provider_cfg = get_google_provider_cfg()
-    # authorization_endpoint = google_provider_cfg["authorization_endpoint"]
-    # request_uri = client.prepare_request_uri(
-    #     authorization_endpoint,
-    #     redirect_uri=request.base_url + "/callback",
-    #     scope=["openid", "email", "profile"],
-    # )
-    # return redirect(request_uri)
-
-
-@app.route("/login/callback")
-def callback():
-    state = flask.session['state']
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        app.config['CLIENT_SECRETS_FILE'], scopes=app.config['SCOPES'], state=state)
-    flow.redirect_uri = flask.url_for('callback', _external=True)
-
-    authorization_response = flask.request.url
-    flow.fetch_token(authorization_response=authorization_response)
-
-    credentials = flow.credentials
-    flask.session['credentials'] = credentials_to_dict(credentials)
-    return flask.redirect(flask.url_for('index'))
-    # code = request.args.get("code")
-    # google_provider_cfg = get_google_provider_cfg()
-    # token_endpoint = google_provider_cfg["token_endpoint"]
-    #
-    # token_url, headers, body = client.prepare_token_request(
-    #     token_endpoint,
-    #     authorization_response=request.url,
-    #     redirect_url=request.base_url,
-    #     code=code
-    # )
-    # token_response = requests.post(
-    #     token_url,
-    #     headers=headers,
-    #     data=body,
-    #     auth=(app.config['GOOGLE_CLIENT_ID'], app.config['GOOGLE_CLIENT_SECRET']),
-    # )
-    #
-    # client.parse_request_body_response(json.dumps(token_response.json()))
-    #
-    # userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
-    # uri, headers, body = client.add_token(userinfo_endpoint)
-    # userinfo_response = requests.get(uri, headers=headers, data=body)
-    #
-    # if userinfo_response.json().get("email_verified"):
-    #     unique_id = userinfo_response.json()["sub"]
-    #     users_email = userinfo_response.json()["email"]
-    #     picture = userinfo_response.json()["picture"]
-    #     users_name = userinfo_response.json()["name"]
-    # else:
-    #     return "User email not available or not verified by Google.", 400
-    #
-    # user = User(unique_id, users_name, users_email, picture)
-    #
-    # exists = db.session.query(
-    #     db.session.query(User).filter_by(id=unique_id).exists()
-    # ).scalar()
-    #
-    # if exists:
-    #     dbUser = User.query.filter_by(id=unique_id).first()
-    #     if dbUser.profile_pic != picture:
-    #         dbUser.profile_pic = picture
-    #         db.session.commit()
-    #     if dbUser.username != users_name:
-    #         dbUser.username = users_name
-    #         db.session.commit()
-    #     login_user(user)
-    #     return redirect(url_for("index"))
-    # else:
-    #     db.session.add(user)
-    #     db.session.commit()
-    #     login_user(user)
-    #     return redirect(url_for("index"))
 
 
 @app.route('/get_kurslist', methods=['POST'])
@@ -141,26 +57,12 @@ def get_grouplist():
 @app.route('/print_student_schedule', methods=['POST'])
 def print_student_schedule():
     group = request.form['group']
-    weekstart = dtc.current_week_start_ms()
+    weekstart = session.get('current_weekstart')
     schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
     schedule_response = requests.get(schedule_request).json()
     res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_response)}))
     res.set_cookie('group', group)
     return res
-
-
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    if 'credentials' in flask.session:
-        credentials = google.oauth2.credentials.Credentials(
-            **flask.session['credentials'])
-        revoke = requests.post('https://oauth2.googleapis.com/revoke',
-                               params={'token': credentials.token},
-                               headers={'content-type': 'application/x-www-form-urlencoded'})
-
-    return redirect(url_for("index"))
 
 
 def get_divisionlist():
@@ -171,14 +73,69 @@ def get_divisionlist():
     return divisions_response
 
 
-def get_google_provider_cfg():
-    return requests.get(app.config['GOOGLE_DISCOVERY_URL']).json()
+@app.route('/write_schedule_to_calendar')
+@login_required
+def write_schedule_to_calendar():
+    if not google_auth.is_logged_in() and not current_user.is_anonymous:
+        raise Exception('User must be logged in')
+
+    weekstart = session.get('current_weekstart')
+    group = request.cookies.get('group')
+
+    calendar_name = 'Расписание занятий'
+
+    calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
+    calendar = next(item for item in calendar_list['items'] if item['summary'] == calendar_name)
+    if calendar:
+        print(calendar['id'])
+    else:
+        new_calendar = {
+            'summary': calendar_name,
+            'timeZone': 'Europe/Moscow'
+        }
+        calendar = google_calendar.build_calendar_api().calendars().insert(body=new_calendar).execute()
+        print(calendar['id'])
+    schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
+    schedule_response = requests.get(schedule_request).json()
+
+    schedule_exercises = []
+
+    for iteration, schedule_item in schedule_response.items():
+        if iteration == 'Authorization':
+            pass
+        else:
+            filtered = ['TitleSubject', 'TypeLesson', 'NumberLesson', 'DateLesson', 'Korpus',
+                        'NumberRoom', 'Family', 'Name', 'SecondName', 'link', 'pass', 'zoom_link',
+                        'zoom_password']
+            res = [schedule_item[key] for key in filtered]
+            schedule_exercise = Exercise(res[0], res[1], res[2], res[3], res[4], res[5], res[6],
+                                         res[7], res[8], res[9], res[10], res[11], res[12])
+            schedule_exercises.append(schedule_exercise)
+        # for key in schedule_item:
+        #     schedule_exercise = Exercise(schedule_item['TitleSubject'], schedule_item['TypeLesson'],
+        #                                  schedule_item['NumberLesson'], schedule_item['DateLesson'],
+        #                                  schedule_item['Korpus'], schedule_item['NumberRoom'],
+        #                                  schedule_item['Family'], schedule_item['Name'],
+        #                                  schedule_item['SecondName'], schedule_item['link'],
+        #                                  schedule_item['pass'], schedule_item['zoom_link'],
+        #                                  schedule_item['zoom_password'], )
+        #     schedule_exercises.append(schedule_exercise)
+    print_student_schedule()
 
 
-def credentials_to_dict(credentials):
-    return {'token': credentials.token,
-            'refresh_token': credentials.refresh_token,
-            'token_uri': credentials.token_uri,
-            'client_id': credentials.client_id,
-            'client_secret': credentials.client_secret,
-            'scopes': credentials.scopes}
+class Exercise:
+    def __init__(self, TitleSubject, TypeLesson, NumberLesson, DateLesson, Korpus, NumberRoom, Family, Name,
+                 SecondName, link, pas, zoom_link, zoom_password):
+        self.TitleSubject = TitleSubject
+        self.TypeLesson = TypeLesson
+        self.startDateTime = DateLesson + dtc.start_time[NumberLesson]
+        self.endDateTime = DateLesson + dtc.start_time[NumberLesson]
+        self.Korpus = Korpus
+        self.NumberRoom = NumberRoom
+        self.Family = Family
+        self.Name = Name
+        self.SecondName = SecondName
+        self.link = link
+        self.pas = pas
+        self.zoom_link = zoom_link
+        self.zoom_password = zoom_password

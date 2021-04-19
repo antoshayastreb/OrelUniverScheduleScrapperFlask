@@ -10,12 +10,11 @@ app = Flask(__name__)
 app.config.from_object(Config)
 app.config.from_pyfile('application.cfg', silent=True)
 app.secret_key = app.config['SECRET_KEY']
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager()
 login.init_app(app)
 
-#client = WebApplicationClient(app.config['GOOGLE_CLIENT_ID'])
-
-from app import routes, models
-from app.models import User
+from app import routes, models, google_auth, google_calendar
+from app.models import User, Group
