@@ -32,3 +32,26 @@ def utc_offset():
     utc_offset = int((datetime.fromtimestamp(ts) -
                       datetime.utcfromtimestamp(ts)).total_seconds() / 60)
     return utc_offset
+
+
+start_time = {
+        1: 'T08:30:00',
+        2: 'T10:10:00',
+        3: 'T12:00:00',
+        4: 'T13:40:00',
+        5: 'T15:20:00',
+        6: 'T17:00:00',
+        7: 'T18:40:00',
+        8: 'T20:15:00'
+    }
+
+end_time = {
+        1: 'T10:00:00',
+        2: 'T11:40:00',
+        3: 'T13:30:00',
+        4: 'T15:10:00',
+        5: 'T16:50:00',
+        6: 'T18:30:00',
+        7: 'T20:10:00',
+        8: 'T21:45:00'
+    }

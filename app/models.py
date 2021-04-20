@@ -9,13 +9,14 @@ def load_user(id):
 
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Text, primary_key=True)
-    username = db.Column(db.Text, index=True, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Text, index=True, unique=True, nullable=False)
+    username = db.Column(db.Text)
     email = db.Column(db.Text, index=True, unique=True, nullable=False)
-    profile_pic = db.Column(db.Text, nullable=False)
+    profile_pic = db.Column(db.Text)
 
-    def __init__(self, id_, username, email, profile_pic):
-        self.id = id_
+    def __init__(self, user_id, username, email, profile_pic):
+        self.user_id = user_id
         self.username = username
         self.email = email
         self.profile_pic = profile_pic

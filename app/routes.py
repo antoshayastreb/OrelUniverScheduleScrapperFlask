@@ -1,5 +1,7 @@
-from app import app, client, db
-from flask import render_template, request, jsonify, make_response, redirect, url_for
+import flask
+
+from app import app, db, google_calendar, google_auth
+from flask import render_template, request, jsonify, make_response, redirect, url_for, session
 import ast
 import requests
 from app import datetimecalc as dtc
@@ -13,75 +15,19 @@ base_request = 'http://oreluniver.ru/schedule/'
 @app.route('/')
 @app.route('/index')
 def index():
+    if google_auth.is_logged_in() and not current_user.is_anonymous:
+        calendar = {
+            'summary': 'Расписание занятий',
+            'timeZone': 'Europe/Moscow'
+        }
+        created_calendar = google_calendar.build_calendar_api().calendars().insert(body=calendar).execute()
+        print(created_calendar['id'])
+    #     calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
+    #     for calendar_list_entry in calendar_list['items']:
+    #         print(calendar_list_entry['summary'])
+    session['current_weekstart'] = dtc.current_week_start_ms()
+
     return render_template('index.html', divisions=get_divisionlist())
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    google_provider_cfg = get_google_provider_cfg()
-    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
-    request_uri = client.prepare_request_uri(
-        authorization_endpoint,
-        redirect_uri=request.base_url + "/callback",
-        scope=["openid", "email", "profile"],
-    )
-    return redirect(request_uri)
-
-
-@app.route("/login/callback")
-def callback():
-    code = request.args.get("code")
-    google_provider_cfg = get_google_provider_cfg()
-    token_endpoint = google_provider_cfg["token_endpoint"]
-
-    token_url, headers, body = client.prepare_token_request(
-        token_endpoint,
-        authorization_response=request.url,
-        redirect_url=request.base_url,
-        code=code
-    )
-    token_response = requests.post(
-        token_url,
-        headers=headers,
-        data=body,
-        auth=(app.config['GOOGLE_CLIENT_ID'], app.config['GOOGLE_CLIENT_SECRET']),
-    )
-
-    client.parse_request_body_response(json.dumps(token_response.json()))
-
-    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
-    uri, headers, body = client.add_token(userinfo_endpoint)
-    userinfo_response = requests.get(uri, headers=headers, data=body)
-
-    if userinfo_response.json().get("email_verified"):
-        unique_id = userinfo_response.json()["sub"]
-        users_email = userinfo_response.json()["email"]
-        picture = userinfo_response.json()["picture"]
-        users_name = userinfo_response.json()["name"]
-    else:
-        return "User email not available or not verified by Google.", 400
-
-    user = User(unique_id, users_name, users_email, picture)
-
-    exists = db.session.query(
-        db.session.query(User).filter_by(id=unique_id).exists()
-    ).scalar()
-
-    if exists:
-        dbUser = User.query.filter_by(id=unique_id).first()
-        if dbUser.profile_pic != picture:
-            dbUser.profile_pic = picture
-            db.session.commit()
-        if dbUser.username != users_name:
-            dbUser.username = users_name
-            db.session.commit()
-        login_user(user)
-        return redirect(url_for("index"))
-    else:
-        db.session.add(user)
-        db.session.commit()
-        login_user(user)
-        return redirect(url_for("index"))
 
 
 @app.route('/get_kurslist', methods=['POST'])
@@ -111,19 +57,12 @@ def get_grouplist():
 @app.route('/print_student_schedule', methods=['POST'])
 def print_student_schedule():
     group = request.form['group']
-    weekstart = dtc.current_week_start_ms()
+    weekstart = session.get('current_weekstart')
     schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
     schedule_response = requests.get(schedule_request).json()
     res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_response)}))
     res.set_cookie('group', group)
     return res
-
-
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for("index"))
 
 
 def get_divisionlist():
@@ -134,5 +73,84 @@ def get_divisionlist():
     return divisions_response
 
 
-def get_google_provider_cfg():
-    return requests.get(app.config['GOOGLE_DISCOVERY_URL']).json()
+@app.route('/write_schedule_to_calendar')
+@login_required
+def write_schedule_to_calendar():
+    if not google_auth.is_logged_in() and not current_user.is_anonymous:
+        raise Exception('User must be logged in')
+
+    weekstart = session.get('current_weekstart')
+    group = request.cookies.get('group')
+
+    calendar_name = 'Расписание занятий'
+
+    calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
+    calendar = next((item for item in calendar_list['items'] if item['summary'] == calendar_name), None)
+    if calendar:
+        print(calendar['id'])
+    else:
+        new_calendar = {
+            'summary': calendar_name,
+            'timeZone': 'Europe/Moscow'
+        }
+        calendar = google_calendar.build_calendar_api().calendars().insert(body=new_calendar).execute()
+        print(calendar['id'])
+    schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
+    schedule_response = requests.get(schedule_request).json()
+
+    schedule_exercises = []
+
+    for iteration, schedule_item in schedule_response.items():
+        if iteration == 'Authorization':
+            pass
+        else:
+            filtered = ['TitleSubject', 'TypeLesson', 'NumberLesson', 'DateLesson', 'Korpus',
+                        'NumberRoom', 'Family', 'Name', 'SecondName', 'link', 'pass', 'zoom_link',
+                        'zoom_password']
+            res = [schedule_item[key] for key in filtered]
+            schedule_exercise = Exercise(res[0], res[1], res[2], res[3], res[4], res[5], res[6],
+                                         res[7], res[8], res[9], res[10], res[11], res[12])
+            schedule_exercises.append(schedule_exercise)
+
+    for exercise in schedule_exercises:
+        event = {
+            'summary': exercise.TitleSubject,
+            'description': '(' + exercise.TypeLesson + ')\nпреподаватель: ' + exercise.Family + ' '
+            + exercise.Name + ' ' + exercise.SecondName + '\n' + exercise.Korpus + '-' + exercise.NumberRoom +
+            '\nссылка: ' + exercise.link + '\nпароль: ' + exercise.pas + '\nссылка_zoom: ' + exercise.zoom_link +
+            '\nпароль_zoom: ' + exercise.zoom_password,
+            'start': {
+                'dateTime': exercise.startDateTime,
+                'timeZone': 'Europe/Moscow',
+            },
+            'end': {
+                'dateTime': exercise.endDateTime,
+                'timeZone': 'Europe/Moscow',
+            },
+            'reminders': {
+                'useDefault': True
+            },
+        }
+
+        event = google_calendar.build_calendar_api().events().insert(calendarId=calendar['id'], body=event).execute()
+        print('Event created: %s' % (event.get('htmlLink')))
+
+    print_student_schedule()
+
+
+class Exercise:
+    def __init__(self, TitleSubject, TypeLesson, NumberLesson, DateLesson, Korpus, NumberRoom, Family, Name,
+                 SecondName, link, pas, zoom_link, zoom_password):
+        self.TitleSubject = TitleSubject if TitleSubject is not None else ''
+        self.TypeLesson = TypeLesson if TypeLesson is not None else ''
+        self.startDateTime = DateLesson + dtc.start_time[NumberLesson]
+        self.endDateTime = DateLesson + dtc.end_time[NumberLesson]
+        self.Korpus = Korpus if Korpus is not None else ''
+        self.NumberRoom = NumberRoom if NumberRoom is not None else ''
+        self.Family = Family if Family is not None else ''
+        self.Name = Name if Name is not None else ''
+        self.SecondName = SecondName if SecondName is not None else ''
+        self.link = link if link is not None else ''
+        self.pas = pas if pas is not None else ''
+        self.zoom_link = zoom_link if zoom_link is not None else ''
+        self.zoom_password = zoom_password if zoom_password is not None else ''
