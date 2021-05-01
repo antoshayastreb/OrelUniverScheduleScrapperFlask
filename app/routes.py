@@ -15,13 +15,13 @@ base_request = 'http://oreluniver.ru/schedule/'
 @app.route('/')
 @app.route('/index')
 def index():
-    if google_auth.is_logged_in() and not current_user.is_anonymous:
-        calendar = {
-            'summary': 'Расписание занятий',
-            'timeZone': 'Europe/Moscow'
-        }
-        created_calendar = google_calendar.build_calendar_api().calendars().insert(body=calendar).execute()
-        print(created_calendar['id'])
+    # if google_auth.is_logged_in() and not current_user.is_anonymous:
+    #     calendar = {
+    #         'summary': 'Расписание занятий',
+    #         'timeZone': 'Europe/Moscow'
+    #     }
+    #     created_calendar = google_calendar.build_calendar_api().calendars().insert(body=calendar).execute()
+    #     print(created_calendar['id'])
     #     calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
     #     for calendar_list_entry in calendar_list['items']:
     #         print(calendar_list_entry['summary'])
@@ -116,9 +116,9 @@ def write_schedule_to_calendar():
         event = {
             'summary': exercise.TitleSubject,
             'description': '(' + exercise.TypeLesson + ')\nпреподаватель: ' + exercise.Family + ' '
-            + exercise.Name + ' ' + exercise.SecondName + '\n' + exercise.Korpus + '-' + exercise.NumberRoom +
-            '\nссылка: ' + exercise.link + '\nпароль: ' + exercise.pas + '\nссылка_zoom: ' + exercise.zoom_link +
-            '\nпароль_zoom: ' + exercise.zoom_password,
+                           + exercise.Name + ' ' + exercise.SecondName + '\n' + exercise.Korpus + '-' + exercise.NumberRoom +
+                           '\nссылка: ' + exercise.link + '\nпароль: ' + exercise.pas + '\nссылка_zoom: ' + exercise.zoom_link +
+                           '\nпароль_zoom: ' + exercise.zoom_password,
             'start': {
                 'dateTime': exercise.startDateTime,
                 'timeZone': 'Europe/Moscow',
@@ -136,6 +136,54 @@ def write_schedule_to_calendar():
         print('Event created: %s' % (event.get('htmlLink')))
 
     print_student_schedule()
+
+
+@app.route('/prepare_calendar_list', methods=['GET'])
+@login_required
+def prepare_calendar_list():
+    page_token = None
+    calendar_data = []
+    while True:
+        calendar_list = google_calendar.build_calendar_api().calendarList().list(pageToken=page_token).execute()
+        for calendar_list_entry in calendar_list['items']:
+            if '@gmail.com' in calendar_list_entry['summary']:
+                calendar_list_entry['summary'] = "Основной"
+            calendar_data.append(calendar_list_entry)
+        page_token = calendar_list.get('nextPageToken')
+        if not page_token:
+            break
+    if not next((item for item in calendar_list['items'] if item['summary'] == "Расписание занятий"), None):
+        new_calendar_entry = {'summary': 'Расписание занятий(Создать новый)'}
+        calendar_data.append(new_calendar_entry)
+    res = make_response(jsonify({'data': render_template('calendar_select.html', calendar_list=calendar_data)}))
+    return res
+
+
+@app.route('/prepare_for_export', methods=['GET'])
+@login_required
+def prepare_for_export():
+    weekstart = session.get('current_weekstart')
+    group = request.cookies.get('group')
+
+    schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
+    schedule_response = requests.get(schedule_request).json()
+
+    schedule_exercises = []
+
+    for iteration, schedule_item in schedule_response.items():
+        if iteration == 'Authorization':
+            pass
+        else:
+            filtered = ['TitleSubject', 'TypeLesson', 'NumberLesson', 'DateLesson', 'Korpus',
+                        'NumberRoom', 'Family', 'Name', 'SecondName', 'link', 'pass', 'zoom_link',
+                        'zoom_password']
+            res = [schedule_item[key] for key in filtered]
+            schedule_exercise = Exercise(res[0], res[1], res[2], res[3], res[4], res[5], res[6],
+                                         res[7], res[8], res[9], res[10], res[11], res[12])
+            schedule_exercises.append(schedule_exercise)
+
+    response = make_response(jsonify({'data': render_template('modal_table.html', calendar_len=len(schedule_exercises))}))
+    return response
 
 
 class Exercise:

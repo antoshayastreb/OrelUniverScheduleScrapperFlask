@@ -1,0 +1,14 @@
+{% block calendarItems%}
+    <label for="calendarID" class="form-label">Целевой календарь</label>
+    <select class="form-select" id="calendarID" aria-label="Default select example">
+        {% for calendar in calendar_list %}
+        {% if calendar.summary == "Расписание занятий(Создать новый)" %}
+            <option selected value="new">{{ calendar.summary }}</option>
+        {% elif calendar.summary == "Расписание занятий" %}
+             <option selected value={{ calendar.id }}>{{ calendar.summary }}</option>
+        {% else %}
+            <option value={{ calendar.id }}>{{ calendar.summary }}</option>
+        {% endif %}
+        {% endfor %}
+    </select>
+{% endblock %}
