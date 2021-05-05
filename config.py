@@ -17,5 +17,6 @@ class Config(object):
     API_SERVICE_NAME = 'calendar'
     API_VERSION = 'v3'
     SSL_CONTEXT = 'adhoc'
-    CLIENT_SECRETS_FILE = "client_secret.json"
     DEBUG = True
+    CELERY_BROKER_URL = 'redis://'
+    CELERY_RESULT_BACKEND = 'redis://'

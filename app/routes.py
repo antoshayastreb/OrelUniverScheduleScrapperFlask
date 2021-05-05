@@ -135,7 +135,14 @@ def write_schedule_to_calendar():
         event = google_calendar.build_calendar_api().events().insert(calendarId=calendar['id'], body=event).execute()
         print('Event created: %s' % (event.get('htmlLink')))
 
-    print_student_schedule()
+
+@app.route('/check_events')
+def chek_events():
+    weekstart = session.get('current_weekstart')
+    calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
+    calendar = next((item for item in calendar_list['items'] if item['summary'] == 'Расписание занятий'), None)
+    get_week_events(calendar['id'], weekstart)
+    print('aboba')
 
 
 @app.route('/prepare_calendar_list', methods=['GET'])
@@ -182,8 +189,26 @@ def prepare_for_export():
                                          res[7], res[8], res[9], res[10], res[11], res[12])
             schedule_exercises.append(schedule_exercise)
 
-    response = make_response(jsonify({'data': render_template('modal_table.html', calendar_len=len(schedule_exercises))}))
+    response = make_response(
+        jsonify({'data': render_template('modal_table.html', calendar_len=len(schedule_exercises))}))
     return response
+
+
+def get_week_events(calendar_id, week_start):
+    week_start = dtc.convert_backUTC(week_start)
+    week_end = dtc.get_week_end(week_start)
+    print(dtc.get_iso_format(week_start))
+
+    page_token = None
+    while True:
+        events = google_calendar.build_calendar_api().events().list(calendarId=calendar_id,
+                                                                    timeMin=dtc.get_iso_format(week_start),
+                                                                    timeMax=dtc.get_iso_format(week_end),
+                                                                    pageToken=page_token).execute()
+        page_token = events.get('nextPageToken')
+        if not page_token:
+            break
+    return events
 
 
 class Exercise:
