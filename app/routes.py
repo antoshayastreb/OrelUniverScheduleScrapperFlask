@@ -7,6 +7,7 @@ import requests
 from app import datetimecalc as dtc
 import json
 from flask_login import current_user, login_user, login_required, logout_user
+from app.tasks import add_schedule_event
 from app.models import User
 
 base_request = 'http://oreluniver.ru/schedule/'
@@ -58,9 +59,23 @@ def get_grouplist():
 def print_student_schedule():
     group = request.form['group']
     weekstart = session.get('current_weekstart')
-    schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
-    schedule_response = requests.get(schedule_request).json()
-    res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_response)}))
+
+    weekstart_date = dtc.convert_back_local(weekstart)
+    weekend_date = dtc.get_week_end(weekstart_date)
+    week_day1 = (str(weekstart_date).split())[0]
+    week_day2 = (str(dtc.increment_by_days(weekstart_date, 1)).split())[0]
+    week_day3 = (str(dtc.increment_by_days(weekstart_date, 2)).split())[0]
+    week_day4 = (str(dtc.increment_by_days(weekstart_date, 3)).split())[0]
+    week_day5 = (str(dtc.increment_by_days(weekstart_date, 4)).split())[0]
+    week_day6 = (str(dtc.increment_by_days(weekstart_date, 5)).split())[0]
+    week_day7 = (str(weekend_date).split())[0]
+
+    schedule_exercises = get_list_of_exercises(group, weekstart)
+
+    res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_exercises, week_day1=week_day1,
+                                                         week_day2=week_day2, week_day3=week_day3, week_day4=week_day4,
+                                                         week_day5=week_day5, week_day6=week_day6,
+                                                         week_day7=week_day7, group=group)}))
     res.set_cookie('group', group)
     return res
 
@@ -73,76 +88,41 @@ def get_divisionlist():
     return divisions_response
 
 
-@app.route('/write_schedule_to_calendar')
+@app.route('/write_schedule_to_calendar', methods=['POST'])
 @login_required
 def write_schedule_to_calendar():
     if not google_auth.is_logged_in() and not current_user.is_anonymous:
         raise Exception('User must be logged in')
 
+    oauth2_tokens = flask.session['auth_token']
+
     weekstart = session.get('current_weekstart')
     group = request.cookies.get('group')
 
-    calendar_name = 'Расписание занятий'
+    calendarID = request.form['calendarID']
 
-    calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
-    calendar = next((item for item in calendar_list['items'] if item['summary'] == calendar_name), None)
-    if calendar:
-        print(calendar['id'])
-    else:
-        new_calendar = {
-            'summary': calendar_name,
-            'timeZone': 'Europe/Moscow'
-        }
-        calendar = google_calendar.build_calendar_api().calendars().insert(body=new_calendar).execute()
-        print(calendar['id'])
-    schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
-    schedule_response = requests.get(schedule_request).json()
+    overwrite = True if 'overwrite' in request.form else False
 
-    schedule_exercises = []
+    schedule_exercises = get_schedule_response(group, weekstart)
 
-    for iteration, schedule_item in schedule_response.items():
-        if iteration == 'Authorization':
-            pass
-        else:
-            filtered = ['TitleSubject', 'TypeLesson', 'NumberLesson', 'DateLesson', 'Korpus',
-                        'NumberRoom', 'Family', 'Name', 'SecondName', 'link', 'pass', 'zoom_link',
-                        'zoom_password']
-            res = [schedule_item[key] for key in filtered]
-            schedule_exercise = Exercise(res[0], res[1], res[2], res[3], res[4], res[5], res[6],
-                                         res[7], res[8], res[9], res[10], res[11], res[12])
-            schedule_exercises.append(schedule_exercise)
-
-    for exercise in schedule_exercises:
-        event = {
-            'summary': exercise.TitleSubject,
-            'description': '(' + exercise.TypeLesson + ')\nпреподаватель: ' + exercise.Family + ' '
-                           + exercise.Name + ' ' + exercise.SecondName + '\n' + exercise.Korpus + '-' + exercise.NumberRoom +
-                           '\nссылка: ' + exercise.link + '\nпароль: ' + exercise.pas + '\nссылка_zoom: ' + exercise.zoom_link +
-                           '\nпароль_zoom: ' + exercise.zoom_password,
-            'start': {
-                'dateTime': exercise.startDateTime,
-                'timeZone': 'Europe/Moscow',
-            },
-            'end': {
-                'dateTime': exercise.endDateTime,
-                'timeZone': 'Europe/Moscow',
-            },
-            'reminders': {
-                'useDefault': True
-            },
-        }
-
-        event = google_calendar.build_calendar_api().events().insert(calendarId=calendar['id'], body=event).execute()
-        print('Event created: %s' % (event.get('htmlLink')))
+    task = add_schedule_event.delay(calendarID, schedule_exercises, oauth2_tokens, overwrite)
+    return jsonify({}), 202, {'Location': url_for('taskstatus',
+                                                  task_id=task.id)}
 
 
-@app.route('/check_events')
+@app.route('/check_events', methods=['POST', 'GET'])
 def chek_events():
     weekstart = session.get('current_weekstart')
+    # group = request.cookies.get('group')
+
     calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
     calendar = next((item for item in calendar_list['items'] if item['summary'] == 'Расписание занятий'), None)
-    get_week_events(calendar['id'], weekstart)
-    print('aboba')
+    events_from_calendar = get_week_events(calendar['id'], weekstart)
+
+    res = make_response(jsonify({'data': render_template('event_amount.html',
+                                                         events_amount=len(events_from_calendar))}))
+
+    return res
 
 
 @app.route('/prepare_calendar_list', methods=['GET'])
@@ -166,12 +146,63 @@ def prepare_calendar_list():
     return res
 
 
-@app.route('/prepare_for_export', methods=['GET'])
-@login_required
-def prepare_for_export():
-    weekstart = session.get('current_weekstart')
-    group = request.cookies.get('group')
+@app.route('/status/')
+def taskstatus(task_id):
+    task = add_schedule_event.AsyncResult(task_id)
+    if task.state == 'PENDING':
+        response = {
+            'state': task.state,
+            'current': 0,
+            'total': 1,
+            'status': 'Pending...'
+        }
+    elif task.state != 'FAILURE':
+        response = {
+            'state': task.state,
+            'current': task.info.get('current', 0),
+            'total': task.info.get('total', 1),
+            'status': task.info.get('status', '')
+        }
+        if 'result' in task.info:
+            response['result'] = task.info['result']
+    else:
+        # something went wrong in the background job
+        response = {
+            'state': task.state,
+            'current': 1,
+            'total': 1,
+            'status': str(task.info),  # this is the exception raised
+        }
+    return jsonify(response)
 
+
+# @app.route('/prepare_for_export', methods=['GET'])
+# @login_required
+# def prepare_for_export():
+#     weekstart = session.get('current_weekstart')
+#     group = request.cookies.get('group')
+#
+#     schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
+#     schedule_response = requests.get(schedule_request).json()
+#
+#     schedule_exercises = get_list_of_exercises(schedule_response)
+#
+#     response = make_response(
+#         jsonify({'data': render_template('event_amount.html', calendar_len=len(schedule_exercises))}))
+#     return response
+
+
+def get_schedule_response(group, weekstart):
+    schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
+    schedule_response = requests.get(schedule_request).json()
+
+    schedule_response.pop('Authorization', schedule_response)
+
+    return schedule_response
+
+
+# Получает пары из ответа oreluniver'а
+def get_list_of_exercises(group, weekstart):
     schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
     schedule_response = requests.get(schedule_request).json()
 
@@ -181,21 +212,23 @@ def prepare_for_export():
         if iteration == 'Authorization':
             pass
         else:
-            filtered = ['TitleSubject', 'TypeLesson', 'NumberLesson', 'DateLesson', 'Korpus',
-                        'NumberRoom', 'Family', 'Name', 'SecondName', 'link', 'pass', 'zoom_link',
+            filtered = ['TitleSubject', 'TypeLesson', 'NumberLesson', 'DateLesson', 'DayWeek', 'NumberSubGruop',
+                        'Korpus', 'NumberRoom', 'Family', 'Name', 'SecondName', 'link', 'pass', 'zoom_link',
                         'zoom_password']
             res = [schedule_item[key] for key in filtered]
-            schedule_exercise = Exercise(res[0], res[1], res[2], res[3], res[4], res[5], res[6],
-                                         res[7], res[8], res[9], res[10], res[11], res[12])
+            schedule_exercise = Exercise(TitleSubject=res[0], TypeLesson=res[1], NumberLesson=res[2], DateLesson=res[3],
+                                         Korpus=res[6], NumberRoom=res[7], Family=res[8], Name=res[9],
+                                         SecondName=res[10], link=res[11],
+                                         pas=res[12], zoom_link=res[13], zoom_password=res[14], DayWeek=res[4],
+                                         NumberSubGruop=res[5])
             schedule_exercises.append(schedule_exercise)
 
-    response = make_response(
-        jsonify({'data': render_template('modal_table.html', calendar_len=len(schedule_exercises))}))
-    return response
+    return schedule_exercises
 
 
+# Получает ивенты из календаря, по началу недели.
 def get_week_events(calendar_id, week_start):
-    week_start = dtc.convert_backUTC(week_start)
+    week_start = dtc.convert_back_utc(week_start)
     week_end = dtc.get_week_end(week_start)
     print(dtc.get_iso_format(week_start))
 
@@ -208,12 +241,26 @@ def get_week_events(calendar_id, week_start):
         page_token = events.get('nextPageToken')
         if not page_token:
             break
-    return events
+    return events['items']
 
 
 class Exercise:
+    endDateTime = None
+    startDateTime = None
+    zoom_link = None
+    NumberRoom = None
+    Korpus = None
+    pas = None
+    zoom_password = None
+    link = None
+    Name = None
+    SecondName = None
+    Family = None
+    TypeLesson = None
+    TitleSubject = None
+
     def __init__(self, TitleSubject, TypeLesson, NumberLesson, DateLesson, Korpus, NumberRoom, Family, Name,
-                 SecondName, link, pas, zoom_link, zoom_password):
+                 SecondName, link, pas, zoom_link, zoom_password, DayWeek, NumberSubGruop):
         self.TitleSubject = TitleSubject if TitleSubject is not None else ''
         self.TypeLesson = TypeLesson if TypeLesson is not None else ''
         self.startDateTime = DateLesson + dtc.start_time[NumberLesson]
@@ -227,3 +274,6 @@ class Exercise:
         self.pas = pas if pas is not None else ''
         self.zoom_link = zoom_link if zoom_link is not None else ''
         self.zoom_password = zoom_password if zoom_password is not None else ''
+        self.NumberLesson = NumberLesson if NumberLesson is not None else ''
+        self.DayWeek = DayWeek if DayWeek is not None else ''
+        self.NumberSubGruop = NumberSubGruop

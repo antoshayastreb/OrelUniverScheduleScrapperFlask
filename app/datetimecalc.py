@@ -26,9 +26,14 @@ def current_week_start_ms():
     return current_week_start
 
 
-def convert_backUTC(week_start):
-    time = datetime.fromtimestamp(week_start // 1000)
-    # time += timedelta(hours=3) #Получение времени по текущему поясу. Лучше вынести в отдельную функцию.
+def convert_back_utc(date):
+    time = datetime.fromtimestamp(date // 1000)
+    return time
+
+
+def convert_back_local(date):
+    time = datetime.fromtimestamp(date // 1000)
+    time += timedelta(hours=3)
     return time
 
 
@@ -39,6 +44,11 @@ def get_week_end(week_start_datetime_format):
 
 def get_iso_format(datetime):
     return datetime.isoformat('T') + 'Z'
+
+
+def increment_by_days(date, num):
+    date += timedelta(days=num)
+    return date
 
 
 # Возвращает разницу с UTC в минутах

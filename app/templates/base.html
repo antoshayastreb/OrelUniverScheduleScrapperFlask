@@ -121,17 +121,35 @@
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Экспорт занятий</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <div class="modal-body">
-                  <div id="calendarItems"></div>
-                  <div id="schedule_events"></div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Экспорт</button>
-              </div>
+              <form action="{{ url_for('write_schedule_to_calendar') }}" method="post">
+                  <div class="modal-body">
+
+                          <div id="calendarItems">
+                              <label for="calendarID" class="form-label">Целевой календарь</label>
+                              <select class="form-select" id="calendarID" name="calendarID" aria-label="Default select example">
+                              </select>
+                          </div>
+
+                          <label for="subgroup" class="form-label">Подгруппа</label>
+                          <select class="form-select" id="subgroup" name="subgroup" aria-label="Default select example">
+                              <option selected>...</option>
+                              <option value="1">Первая</option>
+                              <option value="2">Вторая</option>
+                          </select>
+
+                         <div id="overwriteEvents">
+
+                         </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" id="studsExport" class="btn btn-primary">Экспорт</button>
+                  </div>
+              </form>
             </div>
           </div>
       </div>

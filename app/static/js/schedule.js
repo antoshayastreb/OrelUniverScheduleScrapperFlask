@@ -1,6 +1,17 @@
 $(document).ready(function ()
 {
     general();
+
+    $( "select" ).change(function () {
+    $( "select option:selected " ).each(function() {
+      console.log(calendarID);
+      console.log($(this));
+      if ($(this).text() == 'Расписание занятий'){
+        check_events_from_calendar($(this).attr('value'));
+      }
+    });
+    }).change();
+
 });
 
 function general() {
@@ -33,13 +44,13 @@ function general() {
                 print_schedule(val);
                 break;
             case 'exportForStuds':
-                var modaltable_body = document.getElementById('schedule_events');
-                var calendarItems_body = document.getElementById('calendarItems');
+                var calendarItems_body = document.getElementById('calendarID');
                 calendarItems_body.innerHTML = '';
-                modaltable_body.innerHTML = '';
-                prepare_for_export();
                 prepare_calendar_list();
-
+                var calendarID = $( "select option:selected " ).attr('value');
+                if (calendarID != 'new'){
+                    check_events_from_calendar(calendarID);
+                }
                 break;
         }
     })
@@ -101,7 +112,19 @@ function prepare_calendar_list(){
        type: "GET",
        dataType: "json",
        success: function(resp){
-          $('#calendarItems').append(resp.data);
+          $('#calendarID').append(resp.data);
+       }
+      });
+}
+
+function check_events_from_calendar(calendarID){
+    $.ajax({
+       url: "/check_events",
+       type: "POST",
+       dataType: "json",
+       data: {'calendarID':calendarID},
+       success: function(resp){
+            $('#overwriteEvents').append(resp.data);
        }
       });
 }

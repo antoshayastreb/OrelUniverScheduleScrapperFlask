@@ -43,6 +43,16 @@ def build_credentials():
         token_uri=ACCESS_TOKEN_URI)
 
 
+def build_credentials_token(oauth2_tokens):
+
+    return google.oauth2.credentials.Credentials(
+        oauth2_tokens['access_token'],
+        refresh_token=oauth2_tokens['refresh_token'],
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        token_uri=ACCESS_TOKEN_URI)
+
+
 def get_user_info():
     credentials = build_credentials()
 
