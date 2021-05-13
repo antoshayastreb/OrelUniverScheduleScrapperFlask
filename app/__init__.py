@@ -16,5 +16,5 @@ migrate = Migrate(app, db)
 login = LoginManager()
 login.init_app(app)
 
-from app import routes, models, google_auth, google_calendar
+from app import routes, models, google_auth, google_calendar, oreluniverAPI
 from app.models import User, Group

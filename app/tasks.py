@@ -1,6 +1,10 @@
 from .celery import app
+from celery.schedules import crontab
 from app import datetimecalc as dtc
 from app import google_calendar
+from app import db
+from app.models import User, Group
+from app.oreluniverAPI import get_schedule_response
 
 
 @app.task
@@ -30,9 +34,34 @@ def add_schedule_event(calendarID, schedule_exercises, oauth2_tokens, overwrite)
                 'useDefault': True
             },
         }
-        event = google_calendar.build_calendar_api_token(oauth2_tokens).events().insert(calendarId=calendarID, body=event).execute()
+        event = google_calendar.build_calendar_api_token(oauth2_tokens).events().insert(calendarId=calendarID,
+                                                                                        body=event).execute()
         # self.update_state(state='PROGRESS',
         #                   meta={'current': i, 'total': total,
         #                         'status': 'Создано событие %s' % (event.get('htmlLink'))})
         i += 1
     return {'current': total, 'total': total, 'status': 'Все события созданы!'}
+
+
+@app.task()
+def add_schedule_periodic():
+    users = db.session.query(User).all()
+
+    if users:
+        for user in users:
+            if db.session.query(db.session.query(Group).filter_by(user_id=user.id).exists()).scalar():
+                dbgroup = Group.query.filter_by(user_id=user.id).first()
+                weekstart = dtc.current_week_start_ms()
+                schedule_exercises = get_schedule_response(dbgroup.idGroup, weekstart)
+                if schedule_exercises:
+                    task = add_schedule_event.delay(user.lastCalendarID, schedule_exercises, user.oauth2_tokens, True)
+
+# @app.on_after_configure.connect
+# def on_after_finalize(sender, **kwargs):
+#     sender.add_periodic_task(60.0, add_schedule_periodic.s(), expires=10)
+
+# # Executes every Monday morning at 7:30 a.m.
+# sender.add_periodic_task(
+#     crontab(hour=7, minute=30, day_of_week=1),
+#     test.s('Happy Mondays!'),
+# )

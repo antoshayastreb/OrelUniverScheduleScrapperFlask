@@ -120,7 +120,8 @@ def google_auth_redirect():
     else:
         return "User email not available or not verified by Google.", 400
 
-    user = User(user_id=unique_id, username=users_name, email=users_email, profile_pic=picture)
+    user = User(user_id=unique_id, username=users_name, email=users_email, profile_pic=picture,
+                oauth2_tokens=oauth2_tokens['access_token'])
 
     exists = db.session.query(
         db.session.query(User).filter_by(user_id=unique_id).exists()
@@ -133,6 +134,9 @@ def google_auth_redirect():
             db.session.commit()
         if dbUser.username != user.username:
             dbUser.username = user.username
+            db.session.commit()
+        if dbUser.oauth2_tokens != user.oauth2_tokens:
+            dbUser.oauth2_tokens = user.oauth2_tokens
             db.session.commit()
         login_user(dbUser)
         return redirect(url_for("index"))

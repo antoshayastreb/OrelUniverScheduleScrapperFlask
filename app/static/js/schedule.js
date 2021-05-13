@@ -1,11 +1,16 @@
 $(document).ready(function ()
 {
+    if (document.cookie.split(';').filter((item) => item.trim().startsWith('group=')).length) {
+        var cookieGroup = document.cookie.replace(/(?:(?:^|.*;\s*)group\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        console.log(cookieGroup)
+        print_schedule(cookieGroup)
+    }
+
     general();
 
     $( "select" ).change(function () {
     $( "select option:selected " ).each(function() {
-      console.log(calendarID);
-      console.log($(this));
+      document.getElementById('overwriteEvents').innerHTML = '';
       if ($(this).text() == 'Расписание занятий'){
         check_events_from_calendar($(this).attr('value'));
       }
@@ -51,6 +56,10 @@ function general() {
                 if (calendarID != 'new'){
                     check_events_from_calendar(calendarID);
                 }
+                break;
+            case 'cancelExport':
+                document.getElementById('calendarID').innerHTML = '';
+                document.getElementById('overwriteEvents').innerHTML = '';
                 break;
         }
     })

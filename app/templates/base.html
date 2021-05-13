@@ -135,7 +135,7 @@
 
                           <label for="subgroup" class="form-label">Подгруппа</label>
                           <select class="form-select" id="subgroup" name="subgroup" aria-label="Default select example">
-                              <option selected>...</option>
+                              <option selected value="0">...</option>
                               <option value="1">Первая</option>
                               <option value="2">Вторая</option>
                           </select>
@@ -146,7 +146,7 @@
 
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelExport">Отмена</button>
                     <button type="submit" id="studsExport" class="btn btn-primary">Экспорт</button>
                   </div>
               </form>

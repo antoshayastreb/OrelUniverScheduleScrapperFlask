@@ -1,41 +1,38 @@
 import flask
 
 from app import app, db, google_calendar, google_auth
+from app import oreluniverAPI as ouAPI
 from flask import render_template, request, jsonify, make_response, redirect, url_for, session
-import ast
-import requests
 from app import datetimecalc as dtc
 import json
 from flask_login import current_user, login_user, login_required, logout_user
 from app.tasks import add_schedule_event
-from app.models import User
-
-base_request = 'http://oreluniver.ru/schedule/'
+from app.models import User, Group
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    # if google_auth.is_logged_in() and not current_user.is_anonymous:
-    #     calendar = {
-    #         'summary': 'Расписание занятий',
-    #         'timeZone': 'Europe/Moscow'
-    #     }
-    #     created_calendar = google_calendar.build_calendar_api().calendars().insert(body=calendar).execute()
-    #     print(created_calendar['id'])
-    #     calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
-    #     for calendar_list_entry in calendar_list['items']:
-    #         print(calendar_list_entry['summary'])
+
     session['current_weekstart'] = dtc.current_week_start_ms()
 
-    return render_template('index.html', divisions=get_divisionlist())
+    divisions = ouAPI.get_divisionlist()
+
+    res = make_response(render_template('index.html', divisions=divisions))
+
+    if google_auth.is_logged_in() and not current_user.is_anonymous:
+        dbGroup = Group.query.filter_by(user_id=current_user.id).first()
+        if dbGroup is not None:
+            res.set_cookie('group', str(dbGroup.idGroup))
+            res.set_cookie('subgroup', str(dbGroup.subGroup))
+
+    return res
 
 
 @app.route('/get_kurslist', methods=['POST'])
 def get_kourselist():
     division_id = request.form['division_id']
-    kurslist_request = base_request + str(division_id) + '/' + 'kurslist'
-    kurslist_response = ast.literal_eval(requests.get(kurslist_request).text)
+    kurslist_response = ouAPI.get_kurslist(division_id)
     res = make_response(jsonify({'data': render_template('kurslist.html', kurs_list=kurslist_response)}))
     res.delete_cookie('division_id')
     res.delete_cookie('kurs')
@@ -48,8 +45,7 @@ def get_kourselist():
 def get_grouplist():
     division_id = request.cookies.get('division_id')
     kurs = request.form['kurs']
-    grouplist_request = base_request + str(division_id) + '/' + str(kurs) + '/' + 'grouplist'
-    grouplist_response = ast.literal_eval(requests.get(grouplist_request).text)
+    grouplist_response = ouAPI.get_grouplist(division_id, kurs)
     res = make_response(jsonify({'data': render_template('grouplist.html', group_list=grouplist_response)}))
     res.set_cookie('kurs', kurs)
     return res
@@ -70,7 +66,7 @@ def print_student_schedule():
     week_day6 = (str(dtc.increment_by_days(weekstart_date, 5)).split())[0]
     week_day7 = (str(weekend_date).split())[0]
 
-    schedule_exercises = get_list_of_exercises(group, weekstart)
+    schedule_exercises = ouAPI.get_list_of_exercises(group, weekstart)
 
     res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_exercises, week_day1=week_day1,
                                                          week_day2=week_day2, week_day3=week_day3, week_day4=week_day4,
@@ -78,14 +74,6 @@ def print_student_schedule():
                                                          week_day7=week_day7, group=group)}))
     res.set_cookie('group', group)
     return res
-
-
-def get_divisionlist():
-    divisions_request = base_request + 'divisionlistforstuds'
-
-    divisions_response = ast.literal_eval(requests.get(divisions_request).text)
-
-    return divisions_response
 
 
 @app.route('/write_schedule_to_calendar', methods=['POST'])
@@ -101,13 +89,29 @@ def write_schedule_to_calendar():
 
     calendarID = request.form['calendarID']
 
+    subgroup = request.form['subgroup']
+
     overwrite = True if 'overwrite' in request.form else False
 
-    schedule_exercises = get_schedule_response(group, weekstart)
+    schedule_exercises = ouAPI.get_schedule_response(group, weekstart)
+
+    dbGroup = Group.query.filter_by(user_id=current_user.id).first()
+
+    if dbGroup is None:
+        dbGroup = Group(idGroup=group, subGroup=subgroup, user_id=current_user.id)
+        db.session.add(dbGroup)
+        db.session.commit()
+    else:
+        if dbGroup.idGroup != group:
+            dbGroup.idGroup = group
+            db.session.commit()
+        if dbGroup.subGroup != subgroup:
+            dbGroup.subGroup = subgroup
+            db.session.commit()
 
     task = add_schedule_event.delay(calendarID, schedule_exercises, oauth2_tokens, overwrite)
-    return jsonify({}), 202, {'Location': url_for('taskstatus',
-                                                  task_id=task.id)}
+
+    return redirect(url_for('index'))
 
 
 @app.route('/check_events', methods=['POST', 'GET'])
@@ -192,40 +196,6 @@ def taskstatus(task_id):
 #     return response
 
 
-def get_schedule_response(group, weekstart):
-    schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
-    schedule_response = requests.get(schedule_request).json()
-
-    schedule_response.pop('Authorization', schedule_response)
-
-    return schedule_response
-
-
-# Получает пары из ответа oreluniver'а
-def get_list_of_exercises(group, weekstart):
-    schedule_request = base_request + '/' + str(group) + '///' + str(weekstart) + '/printschedule'
-    schedule_response = requests.get(schedule_request).json()
-
-    schedule_exercises = []
-
-    for iteration, schedule_item in schedule_response.items():
-        if iteration == 'Authorization':
-            pass
-        else:
-            filtered = ['TitleSubject', 'TypeLesson', 'NumberLesson', 'DateLesson', 'DayWeek', 'NumberSubGruop',
-                        'Korpus', 'NumberRoom', 'Family', 'Name', 'SecondName', 'link', 'pass', 'zoom_link',
-                        'zoom_password']
-            res = [schedule_item[key] for key in filtered]
-            schedule_exercise = Exercise(TitleSubject=res[0], TypeLesson=res[1], NumberLesson=res[2], DateLesson=res[3],
-                                         Korpus=res[6], NumberRoom=res[7], Family=res[8], Name=res[9],
-                                         SecondName=res[10], link=res[11],
-                                         pas=res[12], zoom_link=res[13], zoom_password=res[14], DayWeek=res[4],
-                                         NumberSubGruop=res[5])
-            schedule_exercises.append(schedule_exercise)
-
-    return schedule_exercises
-
-
 # Получает ивенты из календаря, по началу недели.
 def get_week_events(calendar_id, week_start):
     week_start = dtc.convert_back_utc(week_start)
@@ -242,38 +212,3 @@ def get_week_events(calendar_id, week_start):
         if not page_token:
             break
     return events['items']
-
-
-class Exercise:
-    endDateTime = None
-    startDateTime = None
-    zoom_link = None
-    NumberRoom = None
-    Korpus = None
-    pas = None
-    zoom_password = None
-    link = None
-    Name = None
-    SecondName = None
-    Family = None
-    TypeLesson = None
-    TitleSubject = None
-
-    def __init__(self, TitleSubject, TypeLesson, NumberLesson, DateLesson, Korpus, NumberRoom, Family, Name,
-                 SecondName, link, pas, zoom_link, zoom_password, DayWeek, NumberSubGruop):
-        self.TitleSubject = TitleSubject if TitleSubject is not None else ''
-        self.TypeLesson = TypeLesson if TypeLesson is not None else ''
-        self.startDateTime = DateLesson + dtc.start_time[NumberLesson]
-        self.endDateTime = DateLesson + dtc.end_time[NumberLesson]
-        self.Korpus = Korpus if Korpus is not None else ''
-        self.NumberRoom = NumberRoom if NumberRoom is not None else ''
-        self.Family = Family if Family is not None else ''
-        self.Name = Name if Name is not None else ''
-        self.SecondName = SecondName if SecondName is not None else ''
-        self.link = link if link is not None else ''
-        self.pas = pas if pas is not None else ''
-        self.zoom_link = zoom_link if zoom_link is not None else ''
-        self.zoom_password = zoom_password if zoom_password is not None else ''
-        self.NumberLesson = NumberLesson if NumberLesson is not None else ''
-        self.DayWeek = DayWeek if DayWeek is not None else ''
-        self.NumberSubGruop = NumberSubGruop
