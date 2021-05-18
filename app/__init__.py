@@ -8,6 +8,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 app.config.from_pyfile('application.cfg', silent=True)
 app.secret_key = app.config['SECRET_KEY']
+app.config['SESSION_TYPE'] = 'filesystem'
 
 
 db = SQLAlchemy(app)
