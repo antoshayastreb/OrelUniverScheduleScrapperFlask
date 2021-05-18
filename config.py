@@ -8,7 +8,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
                               'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_KEY = os.environ.get('SECRET_KEY') or '412540830eef46d8bdda6822a3a1cd8c'
     # GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
     # GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
     # GOOGLE_DISCOVERY_URL = (
