@@ -8,6 +8,8 @@ $(document).ready(function ()
 
     general();
 
+    "\u0423\u0441\u043f\u0435\u0448\u043d\u043e \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e \u0441\u043e\u0431\u044b\u0442\u0438\u0435: \nhttps://www.google.com/calendar/event?eid=Z2RnNHY2amVpbG1xc3Fvamg1MDNvdTU0cmMgbzNubmE4bXBoOWk4Mm1hOGk0c3FnZXRyZHNAZw"
+
     $( "select" ).change(function () {
     $( "select option:selected " ).each(function() {
       document.getElementById('overwriteEvents').innerHTML = '';

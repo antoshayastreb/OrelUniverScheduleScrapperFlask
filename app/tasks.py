@@ -1,5 +1,4 @@
 from .celery import app
-from celery.schedules import crontab
 from app import datetimecalc as dtc
 from app import google_calendar
 from app import db
@@ -8,10 +7,7 @@ from app.oreluniverAPI import get_schedule_response
 
 
 @app.task
-def add_schedule_event(calendarID, schedule_exercises, oauth2_tokens, overwrite):
-    total = len(schedule_exercises)
-    i = 0
-
+def add_schedule_event(calendarID, schedule_exercises, oauth2_tokens, overwrite, user_id, islogin):
     for exercise, value in schedule_exercises.items():
         print(value['TitleSubject'])
         event = {
@@ -36,11 +32,14 @@ def add_schedule_event(calendarID, schedule_exercises, oauth2_tokens, overwrite)
         }
         event = google_calendar.build_calendar_api_token(oauth2_tokens).events().insert(calendarId=calendarID,
                                                                                         body=event).execute()
-        # self.update_state(state='PROGRESS',
-        #                   meta={'current': i, 'total': total,
-        #                         'status': 'Создано событие %s' % (event.get('htmlLink'))})
-        i += 1
-    return {'current': total, 'total': total, 'status': 'Все события созданы!'}
+        if islogin:
+            current_user = User.query.filter_by(id=user_id).first()
+            if current_user:
+                current_user.add_notification(event.get('summary'), "Успешно добавлено событие: \n"
+                                              + event.get('htmlLink'))
+                db.session.commit()
+
+    return {'status': 'Все события созданы!'}
 
 
 @app.task()

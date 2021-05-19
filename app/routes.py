@@ -7,13 +7,12 @@ from app import datetimecalc as dtc
 import json
 from flask_login import current_user, login_user, login_required, logout_user
 from app.tasks import add_schedule_event
-from app.models import User, Group
+from app.models import User, Group, Notification
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-
     session['current_weekstart'] = dtc.current_week_start_ms()
 
     divisions = ouAPI.get_divisionlist()
@@ -109,7 +108,8 @@ def write_schedule_to_calendar():
             dbGroup.subGroup = subgroup
             db.session.commit()
 
-    task = add_schedule_event.delay(calendarID, schedule_exercises, oauth2_tokens, overwrite)
+    task = add_schedule_event.delay(calendarID, schedule_exercises, oauth2_tokens, overwrite, current_user.id,
+                                    not current_user.is_anonymous)
 
     return redirect(url_for('index'))
 
@@ -212,3 +212,16 @@ def get_week_events(calendar_id, week_start):
         if not page_token:
             break
     return events['items']
+
+
+@app.route('/notifications')
+@login_required
+def notifications():
+    since = request.args.get('since', 0.0, type=float)
+    notifications = current_user.notifications.filter(
+        Notification.timestamp > since).order_by(Notification.timestamp.asc())
+    return jsonify([{
+        'name': n.name,
+        'data': n.get_data(),
+        'timestamp': n.timestamp
+    } for n in notifications])
