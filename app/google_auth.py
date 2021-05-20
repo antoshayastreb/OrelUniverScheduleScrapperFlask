@@ -154,5 +154,9 @@ def logout():
     logout_user()
     flask.session.pop(AUTH_TOKEN_KEY, None)
     flask.session.pop(AUTH_STATE_KEY, None)
-
-    return flask.redirect(BASE_URI, code=302)
+    resp = make_response(flask.redirect(BASE_URI, code=302))
+    resp.delete_cookie('group')
+    resp.delete_cookie('kurs')
+    resp.delete_cookie('division')
+    resp.delete_cookie('subgroup')
+    return resp

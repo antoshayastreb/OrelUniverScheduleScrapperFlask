@@ -19,11 +19,13 @@ def index():
 
     res = make_response(render_template('index.html', divisions=divisions))
 
+    res.set_cookie('weekstart', str(dtc.current_week_start_ms()), max_age=60 * 60 * 24)
+
     if google_auth.is_logged_in() and not current_user.is_anonymous:
         dbGroup = Group.query.filter_by(user_id=current_user.id).first()
         if dbGroup is not None:
-            res.set_cookie('group', str(dbGroup.idGroup))
-            res.set_cookie('subgroup', str(dbGroup.subGroup))
+            res.set_cookie('group', str(dbGroup.idGroup), max_age=60 * 60 * 24)
+            res.set_cookie('subgroup', str(dbGroup.subGroup), max_age=60 * 60 * 24)
 
     return res
 
@@ -36,7 +38,7 @@ def get_kourselist():
     res.delete_cookie('division_id')
     res.delete_cookie('kurs')
     res.delete_cookie('group')
-    res.set_cookie('division_id', division_id)
+    res.set_cookie('division_id', division_id, max_age=60 * 60 * 24)
     return res
 
 
@@ -46,7 +48,7 @@ def get_grouplist():
     kurs = request.form['kurs']
     grouplist_response = ouAPI.get_grouplist(division_id, kurs)
     res = make_response(jsonify({'data': render_template('grouplist.html', group_list=grouplist_response)}))
-    res.set_cookie('kurs', kurs)
+    res.set_cookie('kurs', kurs, max_age=60 * 60 * 24)
     return res
 
 
@@ -71,7 +73,60 @@ def print_student_schedule():
                                                          week_day2=week_day2, week_day3=week_day3, week_day4=week_day4,
                                                          week_day5=week_day5, week_day6=week_day6,
                                                          week_day7=week_day7, group=group)}))
-    res.set_cookie('group', group)
+    res.set_cookie('group', group, max_age=60 * 60 * 24)
+    res.set_cookie('weekstart', str(weekstart), max_age=60 * 60 * 24)
+    return res
+
+
+@app.route('/print_student_schedule_prev', methods=['POST'])
+def print_student_schedule_prev():
+    group = request.cookies.get('group')
+    weekstart = request.cookies.get('weekstart')
+    weekstart = int(weekstart) - 604800000
+
+    weekstart_date = dtc.convert_back_local(weekstart)
+    weekend_date = dtc.get_week_end(weekstart_date)
+    week_day1 = (str(weekstart_date).split())[0]
+    week_day2 = (str(dtc.increment_by_days(weekstart_date, 1)).split())[0]
+    week_day3 = (str(dtc.increment_by_days(weekstart_date, 2)).split())[0]
+    week_day4 = (str(dtc.increment_by_days(weekstart_date, 3)).split())[0]
+    week_day5 = (str(dtc.increment_by_days(weekstart_date, 4)).split())[0]
+    week_day6 = (str(dtc.increment_by_days(weekstart_date, 5)).split())[0]
+    week_day7 = (str(weekend_date).split())[0]
+
+    schedule_exercises = ouAPI.get_list_of_exercises(group, weekstart)
+
+    res = make_response(jsonify({'data': render_template('table_prev.html', schedule=schedule_exercises, week_day1=week_day1,
+                                                         week_day2=week_day2, week_day3=week_day3, week_day4=week_day4,
+                                                         week_day5=week_day5, week_day6=week_day6,
+                                                         week_day7=week_day7, group=group)}))
+    res.set_cookie('weekstart', str(weekstart), max_age=60 * 60 * 24)
+    return res
+
+
+@app.route('/print_student_schedule_next', methods=['POST'])
+def print_student_schedule_next():
+    group = request.cookies.get('group')
+    weekstart = request.cookies.get('weekstart')
+    weekstart = int(weekstart) + 604800000
+
+    weekstart_date = dtc.convert_back_local(weekstart)
+    weekend_date = dtc.get_week_end(weekstart_date)
+    week_day1 = (str(weekstart_date).split())[0]
+    week_day2 = (str(dtc.increment_by_days(weekstart_date, 1)).split())[0]
+    week_day3 = (str(dtc.increment_by_days(weekstart_date, 2)).split())[0]
+    week_day4 = (str(dtc.increment_by_days(weekstart_date, 3)).split())[0]
+    week_day5 = (str(dtc.increment_by_days(weekstart_date, 4)).split())[0]
+    week_day6 = (str(dtc.increment_by_days(weekstart_date, 5)).split())[0]
+    week_day7 = (str(weekend_date).split())[0]
+
+    schedule_exercises = ouAPI.get_list_of_exercises(group, weekstart)
+
+    res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_exercises, week_day1=week_day1,
+                                                         week_day2=week_day2, week_day3=week_day3, week_day4=week_day4,
+                                                         week_day5=week_day5, week_day6=week_day6,
+                                                         week_day7=week_day7, group=group)}))
+    res.set_cookie('weekstart', str(weekstart), max_age=60 * 60 * 24)
     return res
 
 

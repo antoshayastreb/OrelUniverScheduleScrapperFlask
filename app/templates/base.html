@@ -55,61 +55,7 @@
         {% endif %}
       </header>
 
-
-      <main>
-          <nav>
-              <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="nav-student-tab" data-bs-toggle="tab" data-bs-target="#nav-student" type="button" role="tab" aria-controls="nav-student" aria-selected="true">Студент</button>
-              </div>
-          </nav>
-          <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-student" role="tabpanel" aria-labelledby="nav-student-tab">
-              <div class="accordion accordion-flush" id="accordionStudent">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="flush-divisionHeader">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-divisions" aria-expanded="false" aria-controls="flush-divisions">
-                        Факультет/Институт
-                      </button>
-                    </h2>
-                    <div id="flush-divisions" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionStudent">
-                      <div class="accordion-body" id="divisions">
-                        {% block divisions%}
-                        {%endblock%}
-                      </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="flush-kursHeader">
-                      <button class="accordion-button collapsed" id="aKurs" type="button" data-bs-toggle="collapse" data-bs-target="#flush-kurs" aria-expanded="false" aria-controls="flush-kurs">
-                        Курс
-                      </button>
-                    </h2>
-                    <div id="flush-kurs" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionStudent">
-                      <div class="accordion-body" id="kurs">
-
-                      </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="flush-groupHeader">
-                      <button class="accordion-button collapsed" id="aGroup" type="button" data-bs-toggle="collapse" data-bs-target="#flush-group" aria-expanded="false" aria-controls="flush-group">
-                        Группа
-                      </button>
-                    </h2>
-                    <div id="flush-group" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionStudent">
-                      <div class="accordion-body" id="group">
-
-                      </div>
-                    </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="tableforstuds">
-
-          </div>
-
-      </main>
+      {% block main %}{% endblock %}
 
     </div>
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>

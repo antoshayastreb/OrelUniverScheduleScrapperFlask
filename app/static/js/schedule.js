@@ -8,8 +8,6 @@ $(document).ready(function ()
 
     general();
 
-    "\u0423\u0441\u043f\u0435\u0448\u043d\u043e \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e \u0441\u043e\u0431\u044b\u0442\u0438\u0435: \nhttps://www.google.com/calendar/event?eid=Z2RnNHY2amVpbG1xc3Fvamg1MDNvdTU0cmMgbzNubmE4bXBoOWk4Mm1hOGk0c3FnZXRyZHNAZw"
-
     $( "select" ).change(function () {
     $( "select option:selected " ).each(function() {
       document.getElementById('overwriteEvents').innerHTML = '';
@@ -63,6 +61,24 @@ function general() {
                 document.getElementById('calendarID').innerHTML = '';
                 document.getElementById('overwriteEvents').innerHTML = '';
                 break;
+            case 'prev':
+                var schedule_body = document.getElementById('tableforstuds');
+                schedule_body.innerHTML = '';
+                var cookieGroup = document.cookie.replace(/(?:(?:^|.*;\s*)group\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+                print_schedule_prev(cookieGroup);
+                break;
+            case 'now':
+                var schedule_body = document.getElementById('tableforstuds');
+                schedule_body.innerHTML = '';
+                var cookieGroup = document.cookie.replace(/(?:(?:^|.*;\s*)group\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+                print_schedule(cookieGroup);
+                break;
+            case 'next':
+                var schedule_body = document.getElementById('tableforstuds');
+                schedule_body.innerHTML = '';
+                var cookieGroup = document.cookie.replace(/(?:(?:^|.*;\s*)group\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+                print_schedule_next(cookieGroup);
+                break;
         }
     })
 }
@@ -96,6 +112,32 @@ function grouplist(kurs){
 function print_schedule(group){
     $.ajax({
        url: "/print_student_schedule",
+       type: "POST",
+       dataType: "json",
+       data: {'group':group},
+       success: function(resp){
+         $('#tableforstuds').append(resp.data);
+         $('#tableforstuds').show();
+       }
+      });
+}
+
+function print_schedule_prev(group){
+    $.ajax({
+       url: "/print_student_schedule_prev",
+       type: "POST",
+       dataType: "json",
+       data: {'group':group},
+       success: function(resp){
+         $('#tableforstuds').append(resp.data);
+         $('#tableforstuds').show();
+       }
+      });
+}
+
+function print_schedule_next(group){
+    $.ajax({
+       url: "/print_student_schedule_next",
        type: "POST",
        dataType: "json",
        data: {'group':group},
