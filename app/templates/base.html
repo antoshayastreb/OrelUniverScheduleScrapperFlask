@@ -71,6 +71,7 @@
                 $.ajax('{{ url_for('notifications') }}?since=' + since).done(
                     function(notifications) {
                         for (var i = 0; i < notifications.length; i++) {
+                           $('.toast').toast('dispose');
                            let div = document.createElement('div');
                            div.className = "toast";
                            div.innerHTML = "<div class=\"toast-header\">" + notifications[i].name + "</div> <div class=\"toast-body\">" +
