@@ -30,6 +30,35 @@ def index():
     return res
 
 
+@app.route('/get_divisionlist', methods=['GET'])
+def get_divisionlist():
+    divisions = ouAPI.get_divisionlist()
+    res = make_response(jsonify({'data': render_template('personal_divisionlist.html', divisions=divisions,
+                                                         user_division=current_user.division)}))
+    return res
+
+
+@app.route('/get_personalkurslist', methods=['POST'])
+def get_personalkurslist():
+    division_id = request.form['division_id']
+    kurslist = ouAPI.get_kurslist(division_id)
+    res = make_response(jsonify({'data': render_template('personal_kurslist.html', kurslist=kurslist,
+                                                         user_kurs=current_user.kurs)}))
+    res.set_cookie('division_id', division_id, max_age=60 * 60 * 24)
+    return res
+
+
+@app.route('/get_personalgrouplist', methods=['POST', 'GET'])
+def get_personalgrouplist():
+    division_id = request.cookies.get('division_id')
+    kurs = request.form['kurs']
+    grouplist = ouAPI.get_grouplist(division_id, kurs)
+    dbGroup = Group.query.filter_by(user_id=current_user.id).first()
+    res = make_response(jsonify({'data': render_template('personal_grouplist.html', grouplist=grouplist,
+                                                         user_group=dbGroup.idGroup)}))
+    return res
+
+
 @app.route('/get_kurslist', methods=['POST'])
 def get_kourselist():
     division_id = request.form['division_id']
@@ -72,7 +101,8 @@ def print_student_schedule():
     res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_exercises, week_day1=week_day1,
                                                          week_day2=week_day2, week_day3=week_day3, week_day4=week_day4,
                                                          week_day5=week_day5, week_day6=week_day6,
-                                                         week_day7=week_day7, group=group)}))
+                                                         week_day7=week_day7, group=group,
+                                                         weekstart_cookie=weekstart)}))
     res.set_cookie('group', group, max_age=60 * 60 * 24)
     res.set_cookie('weekstart', str(weekstart), max_age=60 * 60 * 24)
     return res
@@ -96,10 +126,11 @@ def print_student_schedule_prev():
 
     schedule_exercises = ouAPI.get_list_of_exercises(group, weekstart)
 
-    res = make_response(jsonify({'data': render_template('table_prev.html', schedule=schedule_exercises, week_day1=week_day1,
+    res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_exercises, week_day1=week_day1,
                                                          week_day2=week_day2, week_day3=week_day3, week_day4=week_day4,
                                                          week_day5=week_day5, week_day6=week_day6,
-                                                         week_day7=week_day7, group=group)}))
+                                                         week_day7=week_day7, group=group,
+                                                         weekstart_cookie=weekstart)}))
     res.set_cookie('weekstart', str(weekstart), max_age=60 * 60 * 24)
     return res
 
@@ -125,7 +156,8 @@ def print_student_schedule_next():
     res = make_response(jsonify({'data': render_template('table.html', schedule=schedule_exercises, week_day1=week_day1,
                                                          week_day2=week_day2, week_day3=week_day3, week_day4=week_day4,
                                                          week_day5=week_day5, week_day6=week_day6,
-                                                         week_day7=week_day7, group=group)}))
+                                                         week_day7=week_day7, group=group,
+                                                         weekstart_cookie=weekstart)}))
     res.set_cookie('weekstart', str(weekstart), max_age=60 * 60 * 24)
     return res
 
@@ -137,6 +169,7 @@ def write_schedule_to_calendar():
         raise Exception('User must be logged in')
 
     oauth2_tokens = flask.session['auth_token']
+    refresh_token = current_user.refresh_token
 
     weekstart = session.get('current_weekstart')
     group = request.cookies.get('group')
@@ -149,7 +182,15 @@ def write_schedule_to_calendar():
 
     schedule_exercises = ouAPI.get_schedule_response(group, weekstart)
 
+    dbUser = User.query.filter_by(id=current_user.id).first()
     dbGroup = Group.query.filter_by(user_id=current_user.id).first()
+
+    if dbUser is not None:
+        dbUser.lastCalendarID = calendarID
+        dbUser.auto_insert = True
+        dbUser.division = request.cookies.get('division_id')
+        dbUser.kurs = request.cookies.get('kurs')
+        db.session.commit()
 
     if dbGroup is None:
         dbGroup = Group(idGroup=group, subGroup=subgroup, user_id=current_user.id)
@@ -163,23 +204,26 @@ def write_schedule_to_calendar():
             dbGroup.subGroup = subgroup
             db.session.commit()
 
-    task = add_schedule_event.delay(calendarID, schedule_exercises, oauth2_tokens, overwrite, current_user.id,
-                                    not current_user.is_anonymous)
+    task = add_schedule_event.delay(calendarID, schedule_exercises, oauth2_tokens, refresh_token, overwrite,
+                                    current_user.id,
+                                    not current_user.is_anonymous, weekstart, subgroup)
 
     return redirect(url_for('index'))
 
 
 @app.route('/check_events', methods=['POST', 'GET'])
 def chek_events():
-    weekstart = session.get('current_weekstart')
+    weekstart = int(request.cookies.get('weekstart'))
+    calendarID = request.form['calendarID']
     # group = request.cookies.get('group')
 
-    calendar_list = google_calendar.build_calendar_api().calendarList().list().execute()
-    calendar = next((item for item in calendar_list['items'] if item['summary'] == 'Расписание занятий'), None)
-    events_from_calendar = get_week_events(calendar['id'], weekstart)
+    events_from_calendar = get_week_events(calendarID, weekstart)
+
+    c = sum([1 for item in events_from_calendar if
+             'summary' in item and '(занятие)' in item['summary']]) if events_from_calendar else 0
 
     res = make_response(jsonify({'data': render_template('event_amount.html',
-                                                         events_amount=len(events_from_calendar))}))
+                                                         events_amount=c)}))
 
     return res
 
@@ -202,6 +246,25 @@ def prepare_calendar_list():
         new_calendar_entry = {'summary': 'Расписание занятий(Создать новый)'}
         calendar_data.append(new_calendar_entry)
     res = make_response(jsonify({'data': render_template('calendar_select.html', calendar_list=calendar_data)}))
+    return res
+
+
+@app.route('/prepare_personalcalendar_list', methods=['GET'])
+@login_required
+def prepare_personalcalendar_list():
+    page_token = None
+    calendar_data = []
+    while True:
+        calendar_list = google_calendar.build_calendar_api().calendarList().list(pageToken=page_token).execute()
+        for calendar_list_entry in calendar_list['items']:
+            if '@gmail.com' in calendar_list_entry['summary']:
+                calendar_list_entry['summary'] = "Основной"
+            calendar_data.append(calendar_list_entry)
+        page_token = calendar_list.get('nextPageToken')
+        if not page_token:
+            break
+    res = make_response(jsonify({'data': render_template('personal_calendar.html', calendar_list=calendar_data,
+                                                         lastcalendar=current_user.lastCalendarID)}))
     return res
 
 
@@ -280,3 +343,44 @@ def notifications():
         'data': n.get_data(),
         'timestamp': n.timestamp
     } for n in notifications])
+
+
+
+@app.route('/personal')
+def personal():
+    dbGroup = Group.query.filter_by(user_id=current_user.id).first()
+
+    resp = make_response(render_template('personal.html', user_group=dbGroup.idGroup, user_subgroup=dbGroup.subGroup))
+
+    return resp
+
+
+@app.route('/save_personal', methods=['POST'])
+def save_personal():
+    division = request.form['personaldivision']
+    kurs = request.form['personalkurs']
+    group = request.form['personalgroup']
+    subgroup = request.form['personalsubgroup']
+    calendar = request.form['personalcalendar']
+    auto_insert = request.form['switch']
+
+    dbUser = User.query.filter_by(id=current_user.id).first()
+    dbGroup = Group.query.filter_by(user_id=current_user.id).first()
+
+    dbUser.division = division
+    dbUser.kurs = kurs
+    dbUser.lastCalendarID = calendar
+    dbUser.auto_insert = True if auto_insert == 'on' else False
+    if dbGroup is not None:
+        dbGroup.idGroup = group
+        dbGroup.subGroup = subgroup
+    else:
+        dbGroup = Group(idGroup=group, subGroup=subgroup, user_id=current_user.id)
+
+    current_user.add_notification('Данные обновленны', 'Успешно!')
+
+    db.session.commit()
+
+
+
+    return redirect(url_for('personal'))

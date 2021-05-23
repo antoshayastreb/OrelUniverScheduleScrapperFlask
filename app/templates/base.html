@@ -38,7 +38,7 @@
             </a>
 
         {% else %}
-            <a class="me-3 py-2 text-dark text-decoration-none">{{ current_user.username }}</a>
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{{ url_for('personal') }}">{{ current_user.username }}</a>
             <div class="p-2 bd-highlight">
 
             </div>
@@ -60,7 +60,8 @@
     </div>
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/schedule.js') }}"></script>
+    {% block script %}{% endblock %}
+
     <script type="text/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
     <script>
         {% if current_user.is_authenticated %}
@@ -94,32 +95,7 @@
                 <h5 class="modal-title" id="staticBackdropLabel">Экспорт занятий</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <form action="{{ url_for('write_schedule_to_calendar') }}" method="post">
-                  <div class="modal-body">
-
-                          <div id="calendarItems">
-                              <label for="calendarID" class="form-label">Целевой календарь</label>
-                              <select class="form-select" id="calendarID" name="calendarID" aria-label="Default select example">
-                              </select>
-                          </div>
-
-                          <label for="subgroup" class="form-label">Подгруппа</label>
-                          <select class="form-select" id="subgroup" name="subgroup" aria-label="Default select example">
-                              <option selected value="0">...</option>
-                              <option value="1">Первая</option>
-                              <option value="2">Вторая</option>
-                          </select>
-
-                         <div id="overwriteEvents">
-
-                         </div>
-
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelExport">Отмена</button>
-                    <button type="submit" id="studsExport" class="btn btn-primary">Экспорт</button>
-                  </div>
-              </form>
+              {% block modal %}{% endblock %}
             </div>
           </div>
       </div>

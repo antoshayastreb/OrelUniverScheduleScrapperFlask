@@ -67,6 +67,40 @@
 {% endblock %}
 
 
-{% block bartitle%}
+{% block bartitle %}
 Расписание
+{% endblock %}
+
+
+{% block modal %}
+    <form action="{{ url_for('write_schedule_to_calendar') }}" method="post">
+                  <div class="modal-body">
+
+                          <div id="calendarItems">
+                              <label for="calendarID" class="form-label">Целевой календарь</label>
+                              <select class="form-select" id="calendarID" name="calendarID" aria-label="Default select example">
+                              </select>
+                          </div>
+
+                          <label for="subgroup" class="form-label">Подгруппа</label>
+                          <select class="form-select" id="subgroup" name="subgroup" aria-label="Default select example">
+                              <option selected value="0">...</option>
+                              <option value="1">Первая</option>
+                              <option value="2">Вторая</option>
+                          </select>
+
+                         <div id="overwriteEvents">
+
+                         </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelExport">Отмена</button>
+                    <button type="submit" id="studsExport" class="btn btn-primary">Экспорт</button>
+                  </div>
+              </form>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/schedule.js') }}"></script>
 {% endblock %}

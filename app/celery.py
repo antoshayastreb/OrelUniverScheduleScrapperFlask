@@ -1,4 +1,5 @@
 from celery import Celery
+from celery.schedules import crontab
 
 app = Celery('proj',
              broker='redis://localhost:6379/0',
@@ -12,7 +13,7 @@ app.conf.update(
 app.conf.beat_schedule = {
     'add-every-10-seconds': {
         'task': 'app.tasks.add_schedule_periodic',
-        'schedule': 10.0
+        'schedule': crontab(hour=3)
     },
 }
 

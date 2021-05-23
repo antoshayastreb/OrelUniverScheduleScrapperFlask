@@ -34,11 +34,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 8:30 – 10:00 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -49,11 +56,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 8:30 – 10:00 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -64,11 +78,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 8:30 – 10:00 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -79,11 +100,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 8:30 – 10:00 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -94,11 +122,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 8:30 – 10:00 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -109,11 +144,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 8:30 – 10:00 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -127,11 +169,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 10:10 – 11:40 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -142,11 +191,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 10:10 – 11:40 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -157,11 +213,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 10:10 – 11:40 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -172,11 +235,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 10:10 – 11:40 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -187,11 +257,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 10:10 – 11:40 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -202,11 +279,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 10:10 – 11:40 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -220,11 +304,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 12:00 – 13:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -235,11 +326,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 12:00 – 13:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -250,11 +348,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 12:00 – 13:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -265,11 +370,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 12:00 – 13:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -280,11 +392,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 12:00 – 13:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -295,11 +414,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 12:00 – 13:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -313,11 +439,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 13:40 – 15:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -328,11 +461,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 13:40 – 15:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -343,11 +483,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 13:40 – 15:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -358,11 +505,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 13:40 – 15:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -373,11 +527,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 13:40 – 15:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -388,11 +549,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 13:40 – 15:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                            <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                          {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -406,11 +574,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 15:20 – 16:50 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -421,11 +596,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 15:20 – 16:50 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                            <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                          {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -436,11 +618,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 15:20 – 16:50 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -456,6 +645,7 @@
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -466,11 +656,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 15:20 – 16:50 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -481,11 +678,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 15:20 – 16:50 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -499,11 +703,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 17:00 – 18:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -514,11 +725,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 17:00 – 18:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -529,11 +747,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 17:00 – 18:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -544,11 +769,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 17:00 – 18:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -559,11 +791,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 17:00 – 18:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -574,11 +813,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 17:00 – 18:30 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -592,11 +838,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 18:40 – 20:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -607,11 +860,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 18:40 – 20:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -622,11 +882,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 18:40 – 20:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -637,11 +904,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 18:40 – 20:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -652,11 +926,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 18:40 – 20:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -667,11 +948,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 18:40 – 20:10 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -685,11 +973,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 20:15 – 21:45 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -705,6 +1000,7 @@
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -715,11 +1011,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 20:15 – 21:45 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -730,11 +1033,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 20:15 – 21:45 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -745,11 +1055,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 20:15 – 21:45 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -760,11 +1077,18 @@
                             <p>{{item.TypeLesson}}</p>
                             <p> <i class="bi bi-clock"></i> 20:15 – 21:45 </p>
                             <p> <i class="bi bi-person"></i> {{item.Family}} {{item.Name}} {{item.SecondName}} </p>
-                              <p> <i class="bi bi-geo-alt"></i>  {{item.NumberRoom}} </p>
+                            {% if item.NumberRoom and item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} - {{item.NumberRoom}} </p>
+                            {% elif item.NumberRoom %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.NumberRoom}} </p>
+                            {% elif item.Korpus != "0" %}
+                              <p> <i class="bi bi-geo-alt"></i> {{item.Korpus}} </p>
+                            {% endif %}
                             {% if item.link != '' and   item.link != ' ' %}<p> <i class="bi bi-link-45deg"></i>{{item.link}}  </p> {% endif %}
                             {% if item.pas != '' and   item.pas != ' ' %}<p> Пароль: {{item.pas}}</p>{% endif %}
                             {% if item.zoom_link != '' and   item.zoom_link != ' ' %}<p> Zoom: {{item.zoom_link}}</p>{% endif %}
                             {% if item.zoom_password != '' and   item.zoom_password != ' ' %}<p> Пароль: {{item.zoom_password}} </p>{% endif %}
+                            {% if item.NumberSubGruop != 0 %} <p> подгруппа: {{item.NumberSubGruop}}</p>{% endif %}
                             {% endif %}
                           {% endfor %}
                         </td>
@@ -772,13 +1096,20 @@
                   </tbody>
                 </table>
           </div>
-          {% if current_user.is_authenticated %}
+          {% if current_user.is_authenticated and weekstart_cookie >= session['current_weekstart'] %}
           <button type="button" id="exportForStuds" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
           Экспорт в календарь
           </button>
           {% endif %}
 
     {% else %}
+      <div class="d-flex-responsive flex-row-reverse bd-highlight">
+                      <div class="ms-auto p-2 bd-highlight">
+                        <button class="btn btn-dark mt-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Предыдущая неделя" id="prev"><i class="bi bi-chevron-left"></i></button>
+                        <button class="btn btn-dark mt-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Текущая неделя" id="now"><i class="bi bi-calendar"></i></button>
+                        <button class="btn btn-dark mt-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Следущая неделя" id="next"><i class="bi bi-chevron-right"></i></button>
+                      </div>
+    </div>
       <h3>На эту неделю расписания не найдено!</h3>
     {% endif %}
 {% endblock %}

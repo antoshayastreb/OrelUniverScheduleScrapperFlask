@@ -8,15 +8,14 @@ $(document).ready(function ()
 
     general();
 
-    $( "select" ).change(function () {
-    $( "select option:selected " ).each(function() {
-      document.getElementById('overwriteEvents').innerHTML = '';
-      if ($(this).text() == 'Расписание занятий'){
-        check_events_from_calendar($(this).attr('value'));
-      }
+    $('#calendarID').on('change', function() {
+        var selectedItem = $(this).find(":selected").val();
+        console.log(selectedItem);
+        document.getElementById('overwriteEvents').innerHTML = '';
+        if (selectedItem != 'new'){
+            check_events_from_calendar(selectedItem);
+        }
     });
-    }).change();
-
 });
 
 function general() {
@@ -52,10 +51,6 @@ function general() {
                 var calendarItems_body = document.getElementById('calendarID');
                 calendarItems_body.innerHTML = '';
                 prepare_calendar_list();
-                var calendarID = $( "select option:selected " ).attr('value');
-                if (calendarID != 'new'){
-                    check_events_from_calendar(calendarID);
-                }
                 break;
             case 'cancelExport':
                 document.getElementById('calendarID').innerHTML = '';
@@ -166,11 +161,17 @@ function prepare_calendar_list(){
        dataType: "json",
        success: function(resp){
           $('#calendarID').append(resp.data);
+          var calendarID = $( "select option:selected " ).attr('value');
+                if (calendarID != 'new'){
+                    check_events_from_calendar(calendarID);
+                }
        }
       });
 }
 
 function check_events_from_calendar(calendarID){
+    var exportButton = document.getElementById('studsExport');
+    $('#studsExport').addClass('disabled');
     $.ajax({
        url: "/check_events",
        type: "POST",
@@ -178,6 +179,7 @@ function check_events_from_calendar(calendarID){
        data: {'calendarID':calendarID},
        success: function(resp){
             $('#overwriteEvents').append(resp.data);
+            $('#studsExport').removeClass('disabled');
        }
       });
 }

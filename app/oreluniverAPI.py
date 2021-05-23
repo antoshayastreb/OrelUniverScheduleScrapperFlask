@@ -32,7 +32,8 @@ def get_list_of_exercises(group, weekstart):
     schedule_response = requests.get(schedule_request).json()
 
     schedule_exercises = []
-
+    if not schedule_response:
+        return schedule_exercises
     for iteration, schedule_item in schedule_response.items():
         if iteration == 'Authorization':
             pass
