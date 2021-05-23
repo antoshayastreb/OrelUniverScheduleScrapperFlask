@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
     profile_pic = db.Column(db.String(128))
     lastCalendarID = db.Column(db.String(128))
-    oauth2_tokens = db.Column(db.String(max))
+    oauth2_tokens = db.Column(db.Text)
     # refresh_token = db.Column(db.String(200))
     division = db.Column(db.Integer, index=True)
     kurs = db.Column(db.Integer, index=True)
