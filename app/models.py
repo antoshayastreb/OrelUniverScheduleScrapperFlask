@@ -24,15 +24,13 @@ class User(db.Model, UserMixin):
     notifications = db.relationship('Notification', backref='user', lazy='dynamic')
     auto_insert = db.Column(db.Boolean)
 
-    def __init__(self, user_id, username, email, profile_pic, oauth2_tokens, refresh_token, division, kurs):
+    def __init__(self, user_id, username, email, profile_pic, oauth2_tokens, refresh_token):
         self.user_id = user_id
         self.username = username
         self.email = email
         self.profile_pic = profile_pic
         self.oauth2_tokens = oauth2_tokens
         self.refresh_token = refresh_token
-        self.division = division
-        self.kurs = kurs
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
