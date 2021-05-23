@@ -1,0 +1,9 @@
+{% if calendar_list %}
+    {% for calendar in calendar_list %}
+        {% if lastcalendar == calendar.id %}
+            <option selected value={{ calendar.id }}>Последний: {{ calendar.summary }}</option>
+        {% else %}
+            <option value={{ calendar.id }}>{{ calendar.summary }}</option>
+        {% endif %}
+    {% endfor %}
+{% endif%}

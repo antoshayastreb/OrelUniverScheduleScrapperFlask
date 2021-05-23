@@ -1,0 +1,10 @@
+{% if kurslist %}
+    {% for kurs in kurslist %}
+        {% if user_kurs == kurs.kurs %}
+            <option selected value={{ user_kurs }}>Текущий: {{ user_kurs }}</option>
+        {% elif loop.last and not user_kurs %}
+            <option selected value={{ kurs.kurs }}>{{ kurs.kurs }}</option>
+        {% endif %}
+        <option value={{ kurs.kurs }}>{{ kurs.kurs }}</option>
+    {% endfor %}
+{% endif%}

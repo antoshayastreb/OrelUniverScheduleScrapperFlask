@@ -1,0 +1,10 @@
+{% if divisions %}
+    {% for division in divisions %}
+        {% if user_division == division.idDivision %}
+            <option selected value={{ user_division }}>Текущий: {{ division.shortTitle }}</option>
+        {% elif loop.last and not user_division %}
+            <option selected value={{ division.idDivision }}>{{ division.shortTitle }}</option>
+        {% endif %}
+        <option value={{ division.idDivision }}>{{ division.shortTitle }}</option>
+    {% endfor %}
+{% endif%}

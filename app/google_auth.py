@@ -43,6 +43,16 @@ def build_credentials():
         token_uri=ACCESS_TOKEN_URI)
 
 
+def build_credentials_token(oauth2_tokens, refresh_token):
+
+    return google.oauth2.credentials.Credentials(
+        oauth2_tokens,
+        refresh_token=refresh_token,
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        token_uri=ACCESS_TOKEN_URI)
+
+
 def get_user_info():
     credentials = build_credentials()
 
@@ -110,7 +120,8 @@ def google_auth_redirect():
     else:
         return "User email not available or not verified by Google.", 400
 
-    user = User(user_id=unique_id, username=users_name, email=users_email, profile_pic=picture)
+    user = User(user_id=unique_id, username=users_name, email=users_email, profile_pic=picture,
+                oauth2_tokens=oauth2_tokens['access_token'], refresh_token=oauth2_tokens['refresh_token'])
 
     exists = db.session.query(
         db.session.query(User).filter_by(user_id=unique_id).exists()
@@ -123,6 +134,12 @@ def google_auth_redirect():
             db.session.commit()
         if dbUser.username != user.username:
             dbUser.username = user.username
+            db.session.commit()
+        if dbUser.oauth2_tokens != user.oauth2_tokens:
+            dbUser.oauth2_tokens = user.oauth2_tokens
+            db.session.commit()
+        if dbUser.refresh_token != user.refresh_token:
+            dbUser.refresh_token = user.refresh_token
             db.session.commit()
         login_user(dbUser)
         return redirect(url_for("index"))
@@ -140,5 +157,9 @@ def logout():
     logout_user()
     flask.session.pop(AUTH_TOKEN_KEY, None)
     flask.session.pop(AUTH_STATE_KEY, None)
-
-    return flask.redirect(BASE_URI, code=302)
+    resp = make_response(flask.redirect(BASE_URI, code=302))
+    resp.delete_cookie('group')
+    resp.delete_cookie('kurs')
+    resp.delete_cookie('division')
+    resp.delete_cookie('subgroup')
+    return resp

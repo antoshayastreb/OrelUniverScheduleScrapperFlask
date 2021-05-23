@@ -1,0 +1,20 @@
+{% if grouplist %}
+        {% if user_group %}
+            <option selected value={{ user_group }}>Текущая: {{ user_group }}</option>
+            {% for group in grouplist %}
+                {% if user_group != group.idgruop %}
+                    <option value={{ group.idgruop }}>{{ group.title }}</option>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% for group in grouplist %}
+                {% if loop.last %}
+                <option selected value={{ group.idgruop }}>{{ group.title }}</option>
+                {% else %}
+                <option value={{ group.idgruop }}>{{ group.title }}</option>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+{% elif user_group %}
+    <option selected value={{ user_group }}>Текущая: {{ user_group }}</option>
+{% endif%}
