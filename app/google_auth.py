@@ -1,4 +1,5 @@
 import functools
+import json
 import os
 
 import flask
@@ -43,11 +44,11 @@ def build_credentials():
         token_uri=ACCESS_TOKEN_URI)
 
 
-def build_credentials_token(oauth2_tokens, refresh_token):
+def build_credentials_token(oauth2_tokens):
 
     return google.oauth2.credentials.Credentials(
-        oauth2_tokens,
-        refresh_token=refresh_token,
+        oauth2_tokens['access_token'],
+        refresh_token=oauth2_tokens['refresh_token'],
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         token_uri=ACCESS_TOKEN_URI)
@@ -121,7 +122,7 @@ def google_auth_redirect():
         return "User email not available or not verified by Google.", 400
 
     user = User(user_id=unique_id, username=users_name, email=users_email, profile_pic=picture,
-                oauth2_tokens=oauth2_tokens['access_token'], refresh_token=oauth2_tokens['refresh_token'])
+                oauth2_tokens=json.dumps(oauth2_tokens))
 
     exists = db.session.query(
         db.session.query(User).filter_by(user_id=unique_id).exists()
@@ -138,8 +139,6 @@ def google_auth_redirect():
         if dbUser.oauth2_tokens != user.oauth2_tokens:
             dbUser.oauth2_tokens = user.oauth2_tokens
             db.session.commit()
-        if dbUser.refresh_token != user.refresh_token:
-            dbUser.refresh_token = user.refresh_token
             db.session.commit()
         login_user(dbUser)
         return redirect(url_for("index"))

@@ -17,20 +17,19 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), index=True, unique=True, nullable=False)
     profile_pic = db.Column(db.String(128))
     lastCalendarID = db.Column(db.String(128))
-    oauth2_tokens = db.Column(db.String(200))
-    refresh_token = db.Column(db.String(200))
+    oauth2_tokens = db.Column(db.String(max))
+    # refresh_token = db.Column(db.String(200))
     division = db.Column(db.Integer, index=True)
     kurs = db.Column(db.Integer, index=True)
     notifications = db.relationship('Notification', backref='user', lazy='dynamic')
     auto_insert = db.Column(db.Boolean)
 
-    def __init__(self, user_id, username, email, profile_pic, oauth2_tokens, refresh_token):
+    def __init__(self, user_id, username, email, profile_pic, oauth2_tokens):
         self.user_id = user_id
         self.username = username
         self.email = email
         self.profile_pic = profile_pic
         self.oauth2_tokens = oauth2_tokens
-        self.refresh_token = refresh_token
 
     def __repr__(self):
         return '<User {}>'.format(self.username)

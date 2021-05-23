@@ -7,7 +7,7 @@ from app.oreluniverAPI import get_schedule_response
 
 
 @app.task
-def add_schedule_event(calendarID, schedule_exercises, oauth2_tokens, refresh_token, overwrite, user_id, islogin,
+def add_schedule_event(calendarID, schedule_exercises, oauth2_tokens, overwrite, user_id, islogin,
                        weekstart, subgroup):
     if not schedule_exercises:
         return
@@ -19,14 +19,14 @@ def add_schedule_event(calendarID, schedule_exercises, oauth2_tokens, refresh_to
             'timeZone': 'Europe/Moscow'
         }
 
-        created_calendar = google_calendar.build_calendar_api_token(oauth2_tokens, refresh_token).calendars().insert(
+        created_calendar = google_calendar.build_calendar_api_token(oauth2_tokens).calendars().insert(
             body=calendar).execute()
         calendarID = created_calendar['id']
 
     if overwrite:
         page_token = None
         while True:
-            events = google_calendar.build_calendar_api_token(oauth2_tokens, refresh_token).events().list(
+            events = google_calendar.build_calendar_api_token(oauth2_tokens).events().list(
                 calendarId=calendarID,
                 timeMin=dtc.get_iso_format(
                     week_start),
@@ -39,7 +39,7 @@ def add_schedule_event(calendarID, schedule_exercises, oauth2_tokens, refresh_to
 
         for event in events['items']:
             if '(занятие)' in event['summary']:
-                google_calendar.build_calendar_api_token(oauth2_tokens, refresh_token).events().delete(
+                google_calendar.build_calendar_api_token(oauth2_tokens).events().delete(
                     calendarId=calendarID,
                     eventId=event[
                         'id']).execute()
@@ -97,7 +97,7 @@ def add_schedule_event(calendarID, schedule_exercises, oauth2_tokens, refresh_to
                     ],
                 },
             }
-            event = google_calendar.build_calendar_api_token(oauth2_tokens, refresh_token).events().insert(
+            event = google_calendar.build_calendar_api_token(oauth2_tokens).events().insert(
                 calendarId=calendarID,
                 body=event).execute()
 
@@ -122,7 +122,7 @@ def add_schedule_periodic():
                 schedule_exercises = get_schedule_response(dbgroup.idGroup, weekstart)
                 if schedule_exercises:
                     task = add_schedule_event.delay(user.lastCalendarID, schedule_exercises, user.oauth2_tokens,
-                                                    user.refresh_token, True, user.id, False, weekstart,
+                                                    True, user.id, False, weekstart,
                                                     dbgroup.subGroup)
 
 

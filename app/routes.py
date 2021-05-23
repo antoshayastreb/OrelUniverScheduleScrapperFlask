@@ -169,7 +169,6 @@ def write_schedule_to_calendar():
         raise Exception('User must be logged in')
 
     oauth2_tokens = flask.session['auth_token']
-    refresh_token = current_user.refresh_token
 
     weekstart = session.get('current_weekstart')
     group = request.cookies.get('group')
@@ -204,7 +203,7 @@ def write_schedule_to_calendar():
             dbGroup.subGroup = subgroup
             db.session.commit()
 
-    task = add_schedule_event.delay(calendarID, schedule_exercises, oauth2_tokens, refresh_token, overwrite,
+    task = add_schedule_event.delay(calendarID, schedule_exercises, oauth2_tokens, overwrite,
                                     current_user.id,
                                     not current_user.is_anonymous, weekstart, subgroup)
 
