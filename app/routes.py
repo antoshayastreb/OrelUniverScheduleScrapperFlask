@@ -170,7 +170,8 @@ def write_schedule_to_calendar():
 
     oauth2_tokens = flask.session['auth_token']
 
-    weekstart = session.get('current_weekstart')
+    # weekstart = session.get('current_weekstart')
+    weekstart = int(request.cookies.get('weekstart'))
     group = request.cookies.get('group')
 
     calendarID = request.form['calendarID']
