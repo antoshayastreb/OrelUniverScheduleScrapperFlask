@@ -205,7 +205,7 @@ def write_schedule_to_calendar():
 
     task = add_schedule_event.delay(calendarID, schedule_exercises, oauth2_tokens, overwrite,
                                     current_user.id,
-                                    not current_user.is_anonymous, weekstart, subgroup)
+                                    not current_user.is_anonymous, int(weekstart), subgroup)
 
     return redirect(url_for('index'))
 
