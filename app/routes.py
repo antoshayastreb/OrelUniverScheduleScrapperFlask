@@ -370,7 +370,7 @@ def save_personal():
     subgroup = request.form['personalsubgroup']
     calendar = request.form['personalcalendar']
     if 'switch' in request.form:
-        auto_insert = request.form['switch']
+        auto_insert = True
     else:
         auto_insert = False
 
