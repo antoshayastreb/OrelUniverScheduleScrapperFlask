@@ -353,7 +353,8 @@ def personal():
     dbGroup = Group.query.filter_by(user_id=current_user.id).first()
     if dbGroup is not None:
         resp = make_response(
-            render_template('personal.html', user_group=dbGroup.idGroup, user_subgroup=dbGroup.subGroup))
+            render_template('personal.html', user_group=dbGroup.idGroup,
+                            user_subgroup=dbGroup.subGroup))
     else:
         resp = make_response(
             render_template('personal.html'))
@@ -368,7 +369,10 @@ def save_personal():
     group = request.form['personalgroup']
     subgroup = request.form['personalsubgroup']
     calendar = request.form['personalcalendar']
-    auto_insert = request.form['switch']
+    if 'switch' in request.form:
+        auto_insert = request.form['switch']
+    else:
+        auto_insert = False
 
     dbUser = User.query.filter_by(id=current_user.id).first()
     dbGroup = Group.query.filter_by(user_id=current_user.id).first()
@@ -376,12 +380,13 @@ def save_personal():
     dbUser.division = division
     dbUser.kurs = kurs
     dbUser.lastCalendarID = calendar
-    dbUser.auto_insert = True if auto_insert == 'on' else False
+    dbUser.auto_insert = auto_insert
     if dbGroup is not None:
         dbGroup.idGroup = group
         dbGroup.subGroup = subgroup
     else:
         dbGroup = Group(idGroup=group, subGroup=subgroup, user_id=current_user.id)
+        db.session.add(dbGroup)
 
     current_user.add_notification('Данные обновленны', 'Успешно!')
 
