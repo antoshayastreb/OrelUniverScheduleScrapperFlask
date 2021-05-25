@@ -54,8 +54,11 @@ def get_personalgrouplist():
     kurs = request.form['kurs']
     grouplist = ouAPI.get_grouplist(division_id, kurs)
     dbGroup = Group.query.filter_by(user_id=current_user.id).first()
-    res = make_response(jsonify({'data': render_template('personal_grouplist.html', grouplist=grouplist,
-                                                         user_group=dbGroup.idGroup)}))
+    if dbGroup is not None:
+        res = make_response(jsonify({'data': render_template('personal_grouplist.html', grouplist=grouplist,
+                                                             user_group=dbGroup.idGroup)}))
+    else:
+        res = make_response(jsonify({'data': render_template('personal_grouplist.html', grouplist=grouplist)}))
     return res
 
 
@@ -345,12 +348,15 @@ def notifications():
     } for n in notifications])
 
 
-
 @app.route('/personal')
 def personal():
     dbGroup = Group.query.filter_by(user_id=current_user.id).first()
-
-    resp = make_response(render_template('personal.html', user_group=dbGroup.idGroup, user_subgroup=dbGroup.subGroup))
+    if dbGroup is not None:
+        resp = make_response(
+            render_template('personal.html', user_group=dbGroup.idGroup, user_subgroup=dbGroup.subGroup))
+    else:
+        resp = make_response(
+            render_template('personal.html'))
 
     return resp
 
@@ -380,7 +386,5 @@ def save_personal():
     current_user.add_notification('Данные обновленны', 'Успешно!')
 
     db.session.commit()
-
-
 
     return redirect(url_for('personal'))
